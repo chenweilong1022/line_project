@@ -32,6 +32,7 @@
             r.txt_token as txtToken,
             r.task_id as taskId,
             r.sms_code as smsCode,
+            r.err_msg as errMsg,
             r.register_status as registerStatus,
             r.delete_flag as deleteFlag,
             r.create_time as createTime

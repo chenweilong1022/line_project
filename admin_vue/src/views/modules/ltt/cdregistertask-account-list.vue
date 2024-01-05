@@ -74,7 +74,7 @@
           label="注册状态">
         </el-table-column>
         <el-table-column
-          prop="token"
+          prop="errMsg"
           header-align="center"
           align="center"
           label="失败原因">
