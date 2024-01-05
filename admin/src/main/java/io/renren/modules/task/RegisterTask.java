@@ -172,6 +172,23 @@ public class RegisterTask {
             for (CdRegisterSubtasksEntity cdRegisterSubtasksEntity : cdRegisterSubtasksEntities) {
                 //如果获取的状态为2跳出循环
                 if (RegistrationStatus.RegistrationStatus2.getKey().equals(cdRegisterSubtasksEntity.getRegistrationStatus())) {
+                    //获取子任务数量
+                    int count = cdGetPhoneService.count(new QueryWrapper<CdGetPhoneEntity>().lambda()
+                            .eq(CdGetPhoneEntity::getSubtasksId,cdRegisterSubtasksEntity.getId())
+                    );
+                    if (!cdRegisterSubtasksEntity.getNumberRegistrations().equals(count)) {
+                        CdGetPhoneDTO cdGetPhoneDTO = new CdGetPhoneDTO();
+                        cdGetPhoneDTO.setCount(cdRegisterSubtasksEntity.getNumberRegistrations() - count);
+                        cdGetPhoneDTO.setSubtasksId(cdRegisterSubtasksEntity.getId());
+                        List<CdGetPhoneEntity> cdGetPhoneEntities = cdGetPhoneService.addCount(cdGetPhoneDTO);
+                        //如果数量相等
+                        if (cdGetPhoneDTO.getCount().equals(cdGetPhoneEntities.size() + count)) {
+                            cdRegisterSubtasksEntity.setRegistrationStatus(RegistrationStatus.RegistrationStatus2.getKey());
+                            synchronized (lockObj2) {
+                                cdRegisterSubtasksService.updateById(cdRegisterSubtasksEntity);
+                            }
+                        }
+                    }
                     continue;
                 }
 

@@ -296,7 +296,7 @@ public class BlackListTask {
                     String phoneCode = cdGetPhoneEntity.getCode();
                     //超过20分
                     long between = DateUtil.between(cdGetPhoneEntity.getCreateTime(), DateUtil.date(), DateUnit.MINUTE);
-                    if (between > 20) {
+                    if (between > 7) {
                         cdGetPhoneEntity.setCode("验证码超时");
                         cdGetPhoneEntity.setPhoneStatus(PhoneStatus.PhoneStatus3.getKey());
                         cdGetPhoneEntities.add(cdGetPhoneEntity);
@@ -346,6 +346,9 @@ public class BlackListTask {
         }
         try{
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+            if (ObjectUtil.isNull(projectWorkEntity)) {
+                return;
+            }
             List<CdGetPhoneEntity> list = cdGetPhoneService.list(new QueryWrapper<CdGetPhoneEntity>().lambda()
                     .eq(CdGetPhoneEntity::getPhoneStatus, PhoneStatus.PhoneStatus1.getKey())
                     .last("limit 1")
@@ -357,8 +360,20 @@ public class BlackListTask {
             log.info("list = {},size = {}", JSONUtil.toJsonStr(list),list.size());
             List<CdLineRegisterEntity> cdLineRegisterEntities = new ArrayList<>();
             for (CdGetPhoneEntity cdGetPhoneEntity : list) {
-
-
+                //如果不为空去拉黑手机号
+                CdLineRegisterEntity one = cdLineRegisterService.getOne(new QueryWrapper<CdLineRegisterEntity>().lambda()
+                        .eq(CdLineRegisterEntity::getPhone,cdGetPhoneEntity.getPhone())
+                        .in(CdLineRegisterEntity::getRegisterStatus,RegisterStatus.RegisterStatus4.getKey(),RegisterStatus.RegisterStatus7.getKey(),RegisterStatus.RegisterStatus8.getKey())
+                );
+                if (ObjectUtil.isNotNull(one)) {
+                    if (StrUtil.isNotEmpty(cdGetPhoneEntity.getPkey())) {
+                        boolean b = firefoxService.withBlackMobile(cdGetPhoneEntity.getPkey());
+                        if (b) {
+                            cdGetPhoneService.removeById(cdGetPhoneEntity.getId());
+                            continue;
+                        }
+                    }
+                }
 
                 LineRegisterDTO lineRegisterDTO = new LineRegisterDTO();
                 lineRegisterDTO.setAb(projectWorkEntity.getLineAb());
@@ -379,6 +394,7 @@ public class BlackListTask {
                 log.info("lineRegisterVO = {}", JSONUtil.toJsonStr(lineRegisterVO));
                 // 提交成功
                 if (200 == lineRegisterVO.getCode()) {
+
                     CdLineRegisterEntity cdLineRegisterDTO = new CdLineRegisterEntity();
                     cdLineRegisterDTO.setAb(lineRegisterDTO.getAb());
                     cdLineRegisterDTO.setAppVersion(lineRegisterDTO.getAppVersion());

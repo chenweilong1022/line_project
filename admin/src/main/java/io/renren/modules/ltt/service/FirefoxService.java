@@ -12,4 +12,7 @@ public interface FirefoxService {
     public GetPhoneVo getPhone();
     public String getPhoneCode(String pKey);
     public boolean setRel(String pKey);
+    default boolean withBlackMobile(String pKey){
+        return true;
+    }
 }

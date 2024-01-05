@@ -98,6 +98,35 @@ public class CardMeServiceImpl implements FirefoxService {
             String resp = HttpUtil.createPost(getPhoneHttp).header("token",token).body(jsonStr).execute().body();
             System.out.println(resp);
             ReleaseMobileVO releaseMobileVO = JSON.parseObject(resp, ReleaseMobileVO.class);
+            if (ObjectUtil.isNotNull(releaseMobileVO) && 0 ==  releaseMobileVO.getCode()) {
+                return true;
+            }
+            if (ObjectUtil.isNotNull(releaseMobileVO) && 500 ==  releaseMobileVO.getCode()) {
+                return true;
+            }
+            if (ObjectUtil.isNotNull(releaseMobileVO) && ObjectUtil.isNotNull(releaseMobileVO.getData())) {
+                return releaseMobileVO.getData();
+            }
+        }catch (Exception e) {
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean withBlackMobile(String pKey) {
+        try {
+            String getPhoneHttp =  String.format("%s/app/cdcardlock/withBlackMobile",baseHttp);
+            Map<String,String> param = new HashMap<>();
+            param.put("projectId",projectId);
+            param.put("iccid",pKey);
+            String jsonStr = JSONUtil.toJsonStr(param);
+            String resp = HttpUtil.createPost(getPhoneHttp).header("token",token).body(jsonStr).execute().body();
+            System.out.println(resp);
+            ReleaseMobileVO releaseMobileVO = JSON.parseObject(resp, ReleaseMobileVO.class);
+            if (ObjectUtil.isNotNull(releaseMobileVO) && 0 ==  releaseMobileVO.getCode()) {
+                return true;
+            }
             if (ObjectUtil.isNotNull(releaseMobileVO) && 500 ==  releaseMobileVO.getCode()) {
                 return true;
             }

@@ -2,9 +2,12 @@ package io.renren.modules.ltt.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import io.renren.datasources.annotation.Game;
 import io.renren.modules.ltt.dto.IssueLiffViewDTO;
+import io.renren.modules.ltt.dto.LineTokenJson;
 import io.renren.modules.ltt.entity.CdGroupTasksEntity;
 import io.renren.modules.ltt.entity.CdMaterialPhoneEntity;
 import io.renren.modules.ltt.service.LineService;
@@ -119,6 +122,8 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ZipOutputStream zip = new ZipOutputStream(outputStream);
 
+        List<String> tokens = new ArrayList<>();
+
         for (CdLineRegisterEntity cdLineRegisterEntity : cdLineRegisterEntities) {
             //封装模板数据
             Map<String, Object> map = new HashMap<>();
@@ -129,14 +134,35 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
             Template tpl = Velocity.getTemplate("template/token.txt.vm", "UTF-8" );
             tpl.merge(context, sw);
             try {
+                LineTokenJson lineTokenJson = JSON.parseObject(cdLineRegisterEntity.getToken(), LineTokenJson.class);
+                String format = String.format("%s----%s----%s----%s----%s----%s\n", "66", lineTokenJson.getPhone().replaceFirst("66",""), lineTokenJson.getPassword(), lineTokenJson.getMid(), lineTokenJson.getAccessToken(), lineTokenJson.getRefreshToken());
+                tokens.add(format);
+
                 String packagePath = String.format("token/%s.txt",cdLineRegisterEntity.getPhone());
                 zip.putNextEntry(new ZipEntry(packagePath));
                 IOUtils.write(sw.toString(), zip, "UTF-8");
                 IOUtils.closeQuietly(sw);
                 zip.closeEntry();
             } catch (IOException e) {
-
             }
+        }
+
+        try{
+            //封装模板数据
+            Map<String, Object> map = new HashMap<>();
+            map.put("columns", tokens);
+            VelocityContext context = new VelocityContext(map);
+            //渲染模板
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate("template/84data.vm", "UTF-8" );
+            tpl.merge(context, sw);
+
+            String packagePath = String.format("token/%s.txt","data");
+            zip.putNextEntry(new ZipEntry(packagePath));
+            IOUtils.write(sw.toString(), zip, "UTF-8");
+            IOUtils.closeQuietly(sw);
+            zip.closeEntry();
+        }catch (IOException e) {
         }
         IOUtils.closeQuietly(zip);
         byte[] byteArray = outputStream.toByteArray();
