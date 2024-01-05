@@ -1,5 +1,6 @@
 package io.renren.modules.ltt.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import io.renren.datasources.annotation.Game;
@@ -100,7 +101,7 @@ public class CdGetPhoneServiceImpl extends ServiceImpl<CdGetPhoneDao, CdGetPhone
         }
 
         //如果获取了足够的数量 保存记录
-        if (count == cdGetPhoneEntities.size()) {
+        if (CollUtil.isNotEmpty(cdGetPhoneEntities)) {
             this.saveBatch(cdGetPhoneEntities);
         }
         return cdGetPhoneEntities;

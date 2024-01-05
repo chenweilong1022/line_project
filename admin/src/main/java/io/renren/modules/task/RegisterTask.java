@@ -197,9 +197,8 @@ public class RegisterTask {
                 cdGetPhoneDTO.setSubtasksId(cdRegisterSubtasksEntity.getId());
                 List<CdGetPhoneEntity> cdGetPhoneEntities = cdGetPhoneService.addCount(cdGetPhoneDTO);
                 //如果数量相等
-                if (cdGetPhoneDTO.getCount().equals(cdGetPhoneEntities.size())) {
+                if (CollUtil.isNotEmpty(cdGetPhoneEntities)) {
                     cdRegisterSubtasksEntity.setRegistrationStatus(RegistrationStatus.RegistrationStatus2.getKey());
-
                     synchronized (lockObj2) {
                         cdRegisterSubtasksService.updateById(cdRegisterSubtasksEntity);
                     }
