@@ -104,13 +104,13 @@ public class BlackListTask {
                         continue;
                     }
                     cdLineRegisterEntity.setRegisterStatus(RegisterStatus.RegisterStatus5.getKey());
-                    cdLineRegisterEntity.setToken(registerResultVO.getData().getRemark());
+                    cdLineRegisterEntity.setErrMsg(registerResultVO.getData().getRemark());
                     //id
                     CdGetPhoneEntity cdGetPhoneEntity = new CdGetPhoneEntity();
                     cdGetPhoneEntity.setId(cdLineRegisterEntity.getGetPhoneId());
                     cdGetPhoneEntity.setPhoneStatus(PhoneStatus5.getKey());
                     if (StrUtil.isNotEmpty(cdLineRegisterEntity.getPkey())) {
-                        boolean b = firefoxService.setRel(cdLineRegisterEntity.getPkey());
+                        boolean b = firefoxService.withBlackMobile(cdLineRegisterEntity.getPkey());
                         if (b) {
                             cdGetPhoneEntity.setPhoneStatus(PhoneStatus6.getKey());
                         }

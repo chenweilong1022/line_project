@@ -138,6 +138,11 @@ public class CdLineRegisterVO implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private Date createTime;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String errMsg;
 
 	public String getToken() {
 		if (StrUtil.isEmpty(this.token)) {

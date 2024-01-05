@@ -135,6 +135,11 @@ public class CdLineRegisterEntity implements Serializable {
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
+	private String errMsg;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
 	private Date createTime;
 
 }

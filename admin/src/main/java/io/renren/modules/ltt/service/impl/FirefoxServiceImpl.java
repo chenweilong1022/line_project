@@ -83,4 +83,9 @@ public class FirefoxServiceImpl implements FirefoxService {
         }
         return false;
     }
+
+    @Override
+    public boolean withBlackMobile(String pKey) {
+        return false;
+    }
 }
