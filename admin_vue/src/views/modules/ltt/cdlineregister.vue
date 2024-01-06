@@ -28,6 +28,28 @@
       </el-form-item>
 
       <el-form-item>
+        <el-select v-model="accountExistStatus" placeholder="首次" clearable>
+          <el-option
+            v-for="item in accountExistStatusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <el-select v-model="exportStatus" placeholder="导出" clearable>
+          <el-option
+            v-for="item in exportStatusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
 <!--        <el-button v-if="isAuth('ltt:cdlineregister:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
         <el-button v-if="isAuth('ltt:cdlineregister:delete')" type="danger" @click="issueLiffViewHandle()" :disabled="dataListSelections.length <= 0">批量检测</el-button>
@@ -66,6 +88,12 @@
         label="手机号">
       </el-table-column>
       <el-table-column
+        prop="accountExistStatusStr"
+        header-align="center"
+        align="center"
+        label="首次">
+      </el-table-column>
+      <el-table-column
         prop="proxy"
         header-align="center"
         align="center"
@@ -88,6 +116,12 @@
         header-align="center"
         align="center"
         label="失败原因">
+      </el-table-column>
+      <el-table-column
+        prop="exportStatusStr"
+        header-align="center"
+        align="center"
+        label="导出">
       </el-table-column>
       <el-table-column
         prop="createTime"
@@ -126,14 +160,36 @@
   export default {
     data () {
       return {
-        registerStatus: null,
+        registerStatus: 4,
+        accountExistStatus: null,
         countryCode: null,
+        exportStatus: null,
         countryCodeOptions: [
           {
             label: 'th'
           },
           {
             label: 'jp'
+          }
+        ],
+        accountExistStatusOptions: [
+          {
+            value: 1,
+            label: '首次卡'
+          },
+          {
+            value: 2,
+            label: '二次卡'
+          }
+        ],
+        exportStatusOptions: [
+          {
+            value: 1,
+            label: '未导出'
+          },
+          {
+            value: 2,
+            label: '已导出'
           }
         ],
         workOptions: [
@@ -197,6 +253,8 @@
             'registerStatus': this.registerStatus,
             'phone': this.dataForm.phone,
             'countryCode': this.countryCode,
+            'accountExistStatus': this.accountExistStatus,
+            'exportStatus': this.exportStatus,
             'key': this.dataForm.key
           })
         }).then(({data}) => {

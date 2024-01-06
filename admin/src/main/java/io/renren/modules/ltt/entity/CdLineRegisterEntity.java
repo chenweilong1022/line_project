@@ -127,6 +127,11 @@ public class CdLineRegisterEntity implements Serializable {
 	@ApiModelProperty(required=false,value="")
 	private Integer accountExistStatus;
 	/**
+	 * 账号注册状态 1 未导出 2 已导出
+	 */
+	@ApiModelProperty(required=false,value="")
+	private Integer exportStatus;
+	/**
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")

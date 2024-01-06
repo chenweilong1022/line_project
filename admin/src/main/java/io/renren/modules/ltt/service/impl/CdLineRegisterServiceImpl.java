@@ -10,6 +10,7 @@ import io.renren.modules.ltt.dto.IssueLiffViewDTO;
 import io.renren.modules.ltt.dto.LineTokenJson;
 import io.renren.modules.ltt.entity.CdGroupTasksEntity;
 import io.renren.modules.ltt.entity.CdMaterialPhoneEntity;
+import io.renren.modules.ltt.enums.ExportStatus;
 import io.renren.modules.ltt.service.LineService;
 import io.renren.modules.ltt.service.ProxyService;
 import org.apache.commons.io.IOUtils;
@@ -54,6 +55,8 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
                         .eq(ObjectUtil.isNotNull(cdLineRegister.getRegisterStatus()),CdLineRegisterEntity::getRegisterStatus,cdLineRegister.getRegisterStatus())
                         .eq(StrUtil.isNotEmpty(cdLineRegister.getCountryCode()),CdLineRegisterEntity::getCountryCode,cdLineRegister.getCountryCode())
                         .eq(StrUtil.isNotEmpty(cdLineRegister.getPhone()),CdLineRegisterEntity::getPhone,cdLineRegister.getPhone())
+                        .eq(ObjectUtil.isNotNull(cdLineRegister.getAccountExistStatus()),CdLineRegisterEntity::getAccountExistStatus,cdLineRegister.getAccountExistStatus())
+                        .eq(ObjectUtil.isNotNull(cdLineRegister.getExportStatus()),CdLineRegisterEntity::getExportStatus,cdLineRegister.getExportStatus())
         );
 
         return PageUtils.<CdLineRegisterVO>page(page).setList(CdLineRegisterConver.MAPPER.conver(page.getRecords()));
@@ -114,11 +117,15 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public byte[] importToken(List<Integer> list) {
         init();
         List<CdLineRegisterEntity> cdLineRegisterEntities = this.listByIds(list);
-
-
+        //批量修改为已导出
+        for (CdLineRegisterEntity cdLineRegisterEntity : cdLineRegisterEntities) {
+            cdLineRegisterEntity.setExportStatus(ExportStatus.ExportStatus2.getKey());
+        }
+        this.updateBatchById(cdLineRegisterEntities);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ZipOutputStream zip = new ZipOutputStream(outputStream);
 

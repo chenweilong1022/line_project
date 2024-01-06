@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.common.utils.EnumUtil;
+import io.renren.modules.ltt.enums.AccountExistStatus;
+import io.renren.modules.ltt.enums.ExportStatus;
 import io.renren.modules.ltt.enums.RegisterStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -134,6 +136,11 @@ public class CdLineRegisterVO implements Serializable {
 	@ApiModelProperty(required=false,value="")
 	private String pkey;
 	/**
+	 * 账号注册状态 1 未导出 2 已导出
+	 */
+	@ApiModelProperty(required=false,value="")
+	private Integer exportStatus;
+	/**
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
@@ -143,6 +150,14 @@ public class CdLineRegisterVO implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private String errMsg;
+
+	public String getAccountExistStatusStr() {
+		return EnumUtil.queryValueByKey(accountExistStatus,AccountExistStatus.values());
+	}
+
+	public String getExportStatusStr() {
+		return EnumUtil.queryValueByKey(exportStatus, ExportStatus.values());
+	}
 
 	public String getToken() {
 		if (StrUtil.isEmpty(this.token)) {
