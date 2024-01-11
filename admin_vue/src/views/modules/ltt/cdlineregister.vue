@@ -50,6 +50,17 @@
       </el-form-item>
 
       <el-form-item>
+        <el-select v-model="openStatus" placeholder="打开状态" clearable>
+          <el-option
+            v-for="item in openStatusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
 <!--        <el-button v-if="isAuth('ltt:cdlineregister:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>-->
         <el-button v-if="isAuth('ltt:cdlineregister:delete')" type="danger" @click="issueLiffViewHandle()" :disabled="dataListSelections.length <= 0">批量检测</el-button>
@@ -164,12 +175,39 @@
         accountExistStatus: null,
         countryCode: null,
         exportStatus: null,
+        openStatus: null,
         countryCodeOptions: [
           {
             label: 'th'
           },
           {
             label: 'jp'
+          }
+        ],
+        openStatusOptions: [
+          {
+            value: 1,
+            label: '未打开'
+          },
+          {
+            value: 2,
+            label: '打开中'
+          },
+          {
+            value: 3,
+            label: '已打开'
+          },
+          {
+            value: 4,
+            label: '打开失败'
+          },
+          {
+            value: 5,
+            label: '需要更新token'
+          },
+          {
+            value: 6,
+            label: '二次失败'
           }
         ],
         accountExistStatusOptions: [
@@ -255,6 +293,7 @@
             'countryCode': this.countryCode,
             'accountExistStatus': this.accountExistStatus,
             'exportStatus': this.exportStatus,
+            'openStatus': this.openStatus,
             'key': this.dataForm.key
           })
         }).then(({data}) => {

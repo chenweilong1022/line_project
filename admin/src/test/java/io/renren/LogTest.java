@@ -44,10 +44,23 @@ public class LogTest {
     }
 
     public static void main(String[] args) throws IOException {
-        String[] strings = FileUtil.readLines("/Users/chenweilong/Downloads/27884-泰国卡充值.txt");
+
+        String[] old = FileUtil.readLines("/Users/chenweilong/Downloads/27884-泰国卡充值2.txt");
+        Set<String> oldSet = new HashSet<>();
+        for (String s : old) {
+            oldSet.add(s);
+        }
+
+
+        String[] strings = FileUtil.readLines("/Users/chenweilong/Downloads/export_20240109.txt");
         Set<String> set = new HashSet<>();
         for (String string : strings) {
-            set.add(string);
+            String replaceFirst = string.replaceFirst("66","0");
+            if (oldSet.contains(replaceFirst)) {
+
+            }else {
+                set.add(string);
+            }
         }
         String f = "";
         for (String s : set) {

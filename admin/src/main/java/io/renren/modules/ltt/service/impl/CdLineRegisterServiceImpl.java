@@ -57,6 +57,7 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
                         .eq(StrUtil.isNotEmpty(cdLineRegister.getPhone()),CdLineRegisterEntity::getPhone,cdLineRegister.getPhone())
                         .eq(ObjectUtil.isNotNull(cdLineRegister.getAccountExistStatus()),CdLineRegisterEntity::getAccountExistStatus,cdLineRegister.getAccountExistStatus())
                         .eq(ObjectUtil.isNotNull(cdLineRegister.getExportStatus()),CdLineRegisterEntity::getExportStatus,cdLineRegister.getExportStatus())
+                        .eq(ObjectUtil.isNotNull(cdLineRegister.getOpenStatus()),CdLineRegisterEntity::getOpenStatus,cdLineRegister.getOpenStatus())
         );
 
         return PageUtils.<CdLineRegisterVO>page(page).setList(CdLineRegisterConver.MAPPER.conver(page.getRecords()));
