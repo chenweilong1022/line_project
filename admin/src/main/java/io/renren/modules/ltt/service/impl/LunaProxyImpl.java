@@ -95,8 +95,10 @@ public class LunaProxyImpl implements ProxyService {
         }
         log.info("proxy = {}","lunaproxy");
         if (StrUtil.isEmpty(ip)) {
+            log.info("proxy = {}","lunaproxy empty");
             return ip;
         }
+        log.info("proxy = {} ip = {}","lunaproxy",ip);
         return String.format("socks5://%s", ip);
     }
 
