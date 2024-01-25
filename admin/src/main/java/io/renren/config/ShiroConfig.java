@@ -67,6 +67,7 @@ public class ShiroConfig {
         filterMap.put("/h5/**", "anon");
         filterMap.put("/ops/v1/**", "anon");
         filterMap.put("/file/**", "anon");
+        filterMap.put("/ltt/cdlineusernamepass/save", "anon");
         filterMap.put("/v2/api-docs", "anon");
         filterMap.put("/swagger-ui.html", "anon");
         filterMap.put("/doc.html", "anon");

@@ -1,4 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
+# curl -x 156.249.163.55:2000 ipinfo.io
+# curl -x 154.86.111.244:2000 ipinfo.io
 .idea
 *.iml
 ./admin/target
