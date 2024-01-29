@@ -88,6 +88,15 @@ public class CdLineRegisterController {
     }
 
     /**
+     * 保存app的token
+     */
+    @RequestMapping("/syncAppToken")
+    public R syncAppToken(@RequestBody CdLineRegisterDTO cdLineRegister){
+        cdLineRegisterService.save(cdLineRegister);
+        return R.ok();
+    }
+
+    /**
      * 修改
      */
     @RequestMapping("/update")

@@ -69,6 +69,7 @@ public class ShiroConfig {
         filterMap.put("/file/**", "anon");
         filterMap.put("/ltt/cdlineusernamepass/save", "anon");
         filterMap.put("/ltt/cdlineip/save", "anon");
+        filterMap.put("/ltt/cdlineregister/syncAppToken", "anon");
         filterMap.put("/v2/api-docs", "anon");
         filterMap.put("/swagger-ui.html", "anon");
         filterMap.put("/doc.html", "anon");

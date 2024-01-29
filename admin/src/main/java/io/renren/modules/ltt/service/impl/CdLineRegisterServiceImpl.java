@@ -11,6 +11,7 @@ import io.renren.modules.ltt.dto.LineTokenJson;
 import io.renren.modules.ltt.entity.CdGroupTasksEntity;
 import io.renren.modules.ltt.entity.CdMaterialPhoneEntity;
 import io.renren.modules.ltt.enums.ExportStatus;
+import io.renren.modules.ltt.enums.RegisterStatus;
 import io.renren.modules.ltt.service.LineService;
 import io.renren.modules.ltt.service.ProxyService;
 import org.apache.commons.io.IOUtils;
@@ -69,6 +70,7 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
 
     @Override
     public boolean save(CdLineRegisterDTO cdLineRegister) {
+        cdLineRegister.setRegisterStatus(RegisterStatus.RegisterStatus9.getKey());
         CdLineRegisterEntity cdLineRegisterEntity = CdLineRegisterConver.MAPPER.converDTO(cdLineRegister);
         return this.save(cdLineRegisterEntity);
     }
