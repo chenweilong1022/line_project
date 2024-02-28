@@ -1,7 +1,11 @@
 package io.renren.modules.ltt.service.impl;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ImageUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
@@ -23,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -48,10 +53,40 @@ public class LunaProxyImpl implements ProxyService {
     @Autowired
     private CdLineRegisterService cdLineRegisterService;
 
+
+
+    private boolean isProxyUse(String ip) {
+        try {
+            String format = String.format("curl --socks5 %s ipinfo.io",ip);
+            List<String> strings = RuntimeUtil.execForLines(format);
+            for (String string : strings) {
+                if (string.toLowerCase().contains("country") && string.toLowerCase().contains("th")) {
+                    return true;
+                }
+            }
+            return false;
+        }catch (Exception e) {
+
+        }
+        return false;
+    }
+
+
     @Override
-    public String getflowip(CdLineRegisterEntity cdLineRegisterEntity) {
+    public synchronized String getflowip(CdLineRegisterEntity cdLineRegisterEntity) {
+        String proxy = cdLineRegisterEntity.getProxy();
+        if (StrUtil.isNotEmpty(proxy)) {
+            //如果失效了，并且不是泰国ip 去更换ip
+            boolean proxyUse = isProxyUse(proxy);
+            if (proxyUse) {
+                return String.format("socks5://%s", proxy);
+            }
+        }
         //如果是ip2world
         ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+        if (ObjectUtil.isNull(projectWorkEntity)) {
+            return null;
+        }
         if (ProxyStatus.ProxyStatus2.getKey().equals(projectWorkEntity.getProxy())) {
             String ip = getflowip1(cdLineRegisterEntity);
             if (StrUtil.isEmpty(ip)) {
@@ -77,7 +112,7 @@ public class LunaProxyImpl implements ProxyService {
         Queue<String> getflowip = caffeineCacheListString.getIfPresent("getflowip");
         String ip = null;
         if (CollUtil.isEmpty(getflowip)) {
-            String getPhoneHttp = String.format("https://tq.lunaproxy.com/getflowip?neek=1136881&num=50&type=1&sep=1&regions=%s&ip_si=1&level=1&sb=",cdLineRegisterEntity.getCountryCode());
+            String getPhoneHttp = String.format("https://tq.lunaproxy.com/getflowip?neek=1136881&num=500&type=1&sep=1&regions=%s&ip_si=1&level=1&sb=",cdLineRegisterEntity.getCountryCode());
             String resp = HttpUtil.get(getPhoneHttp);
             if (JSONUtil.isJson(resp)) {
                 return null;
@@ -98,8 +133,20 @@ public class LunaProxyImpl implements ProxyService {
             log.info("proxy = {}","lunaproxy empty");
             return ip;
         }
+        //更新代理ip
+        CdLineRegisterEntity update = new CdLineRegisterEntity();
+        update.setId(cdLineRegisterEntity.getId());
+        update.setProxy(ip);
+        cdLineRegisterService.updateById(update);
         log.info("proxy = {} ip = {}","lunaproxy",ip);
         return String.format("socks5://%s", ip);
+    }
+
+    public static void main(String[] args) {
+
+        String encode = Base64.encode(new File("/Users/chenweilong/Downloads/2024-01-29 15.56.46.jpg"));
+        System.out.println(encode);
+
     }
 
     @Override

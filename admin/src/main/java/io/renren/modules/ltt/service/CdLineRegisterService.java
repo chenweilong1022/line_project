@@ -81,5 +81,11 @@ public interface CdLineRegisterService extends IService<CdLineRegisterEntity> {
      */
     void clearProxy();
 
+    /**
+     * 账号锁了
+     * @param cdLineRegister
+     * @return
+     */
+    boolean unLock(Integer id);
 }
 

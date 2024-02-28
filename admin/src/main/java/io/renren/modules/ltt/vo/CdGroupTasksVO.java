@@ -112,7 +112,11 @@ public class CdGroupTasksVO implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private String taskId;
-
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
+	private Integer materialPhoneType;
 	public String getGroupStatusStr() {
 		return EnumUtil.queryValueByKey(this.groupStatus, GroupStatus.values());
 	}

@@ -23,10 +23,16 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="remark"
+      prop="remark"
+      header-align="center"
+      align="center"
+      label="标题">
+    </el-table-column>
+      <el-table-column
+        prop="typeStr"
         header-align="center"
         align="center"
-        label="标题">
+        label="类型">
       </el-table-column>
       <el-table-column
         prop="uploadNumber"

@@ -110,6 +110,11 @@ public class CdGroupTasksEntity implements Serializable {
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
+	private Integer materialPhoneType;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
 	private Date createTime;
 
 }

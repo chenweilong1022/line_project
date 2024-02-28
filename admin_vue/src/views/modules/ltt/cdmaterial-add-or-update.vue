@@ -8,6 +8,17 @@
     <el-form-item label="备注" prop="remark">
       <el-input v-model="dataForm.remark" placeholder=""></el-input>
     </el-form-item>
+      <el-form-item  label="料子类型">
+        <el-select v-model="type" placeholder="类型" clearable>
+          <el-option
+            v-for="item in typeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="料子">
         <el-upload
           class="upload-demo"
@@ -36,6 +47,17 @@
   export default {
     data () {
       return {
+        type: null,
+        typeOptions: [
+          {
+            value: 1,
+            label: '拉群料子'
+          },
+          {
+            value: 2,
+            label: '私信料子'
+          }
+        ],
         fullscreenLoading: false,
         visible: false,
         dataForm: {
@@ -119,6 +141,7 @@
               data: this.$http.adornData({
                 'id': this.dataForm.id || undefined,
                 'remark': this.dataForm.remark,
+                'type': this.type,
                 'uploadNumber': this.dataForm.uploadNumber,
                 'synchronizationsNumber': this.dataForm.synchronizationsNumber,
                 'successesNumber': this.dataForm.successesNumber,

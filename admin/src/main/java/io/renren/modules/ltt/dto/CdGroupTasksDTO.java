@@ -110,6 +110,11 @@ public class CdGroupTasksDTO extends PageParam implements Serializable {
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
+	private Integer materialPhoneType;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
 	private Date createTime;
 	/**
 	 *

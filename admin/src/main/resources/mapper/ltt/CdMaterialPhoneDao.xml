@@ -40,5 +40,25 @@
         <result property="errMsg" column="err_msg"/>
     </resultMap>
 
+    <select id="canSendListByGroupTaskId" resultType="io.renren.modules.ltt.vo.CanSendListByGroupTaskIdVO">
+        SELECT
+            mp.group_task_id as groupTaskId,
+            MAX( mp.id ) as materialPhoneId
+        FROM
+            cd_material_phone mp
+                LEFT JOIN cd_group_tasks gt ON gt.id = mp.group_task_id
+                LEFT JOIN cd_line_register lr ON lr.id = mp.line_register_id
+            <where>
+                gt.material_phone_type = 2
+                <if test="dto.materialPhoneStatus != null and dto.materialPhoneStatus > 0">
+                    AND mp.material_phone_status = #{dto.materialPhoneStatus}
+                </if>
+                AND gt.group_status = 7
+            </where>
+
+        GROUP BY
+            mp.group_task_id
+    </select>
+
 
 </mapper>

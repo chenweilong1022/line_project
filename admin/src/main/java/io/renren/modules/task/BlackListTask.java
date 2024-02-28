@@ -1,74 +1,74 @@
-//package io.renren.modules.task;
-//
-//import cn.hutool.core.collection.CollUtil;
-//import cn.hutool.core.date.DateUnit;
-//import cn.hutool.core.date.DateUtil;
-//import cn.hutool.core.util.ObjectUtil;
-//import cn.hutool.core.util.StrUtil;
-//import cn.hutool.json.JSONUtil;
-//import com.alibaba.fastjson.JSON;
-//import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-//import com.github.benmanes.caffeine.cache.Cache;
-//import io.renren.common.utils.ConfigConstant;
-//import io.renren.modules.ltt.dto.*;
-//import io.renren.modules.ltt.entity.CdGetPhoneEntity;
-//import io.renren.modules.ltt.entity.CdLineRegisterEntity;
-//import io.renren.modules.ltt.enums.AccountExistStatus;
-//import io.renren.modules.ltt.enums.DeleteFlag;
-//import io.renren.modules.ltt.enums.PhoneStatus;
-//import io.renren.modules.ltt.enums.RegisterStatus;
-//import io.renren.modules.ltt.service.*;
-//import io.renren.modules.ltt.vo.*;
-//import io.renren.modules.sys.entity.ProjectWorkEntity;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.scheduling.annotation.Async;
-//import org.springframework.scheduling.annotation.EnableAsync;
-//import org.springframework.scheduling.annotation.Scheduled;
-//import org.springframework.stereotype.Component;
-//import org.springframework.transaction.annotation.Transactional;
-//import springfox.documentation.annotations.ApiIgnore;
-//
-//import javax.annotation.Resource;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.concurrent.locks.ReentrantLock;
-//
-//import static io.renren.modules.ltt.enums.PhoneStatus.PhoneStatus5;
-//import static io.renren.modules.ltt.enums.PhoneStatus.PhoneStatus6;
-//
-///**
-// * @author liuyuchan
-// * @email liuyuchan286@gmail.com
-// * @date 2023/11/21 18:45
-// */
-//@Component
-//@Slf4j
-//@EnableAsync
-//public class BlackListTask {
-//
-//
-//    @Autowired
-//    private CdGetPhoneService cdGetPhoneService;
-//    @Autowired
-//    private CdLineRegisterService cdLineRegisterService;
-//    @Autowired
-//    private LineService lineService;
-//    @Autowired
-//    private ProxyService proxyService;
-//    @Resource(name = "cardMeServiceImpl")
-//    private FirefoxService firefoxService;
-//
-//    @Resource(name = "caffeineCacheProjectWorkEntity")
-//    private Cache<String, ProjectWorkEntity> caffeineCacheProjectWorkEntity;
-//
-//    public static final Object lockObj = new Object();
-//
-//
-//
-//    @Resource(name = "caffeineCacheCode")
-//    private Cache<String, String> caffeineCacheCode;
-//
+package io.renren.modules.task;
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.benmanes.caffeine.cache.Cache;
+import io.renren.common.utils.ConfigConstant;
+import io.renren.modules.ltt.dto.*;
+import io.renren.modules.ltt.entity.CdGetPhoneEntity;
+import io.renren.modules.ltt.entity.CdLineRegisterEntity;
+import io.renren.modules.ltt.enums.AccountExistStatus;
+import io.renren.modules.ltt.enums.DeleteFlag;
+import io.renren.modules.ltt.enums.PhoneStatus;
+import io.renren.modules.ltt.enums.RegisterStatus;
+import io.renren.modules.ltt.service.*;
+import io.renren.modules.ltt.vo.*;
+import io.renren.modules.sys.entity.ProjectWorkEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static io.renren.modules.ltt.enums.PhoneStatus.PhoneStatus5;
+import static io.renren.modules.ltt.enums.PhoneStatus.PhoneStatus6;
+
+/**
+ * @author liuyuchan
+ * @email liuyuchan286@gmail.com
+ * @date 2023/11/21 18:45
+ */
+@Component
+@Slf4j
+@EnableAsync
+public class BlackListTask {
+
+
+    @Autowired
+    private CdGetPhoneService cdGetPhoneService;
+    @Autowired
+    private CdLineRegisterService cdLineRegisterService;
+    @Autowired
+    private LineService lineService;
+    @Autowired
+    private ProxyService proxyService;
+    @Resource(name = "cardMeServiceImpl")
+    private FirefoxService firefoxService;
+
+    @Resource(name = "caffeineCacheProjectWorkEntity")
+    private Cache<String, ProjectWorkEntity> caffeineCacheProjectWorkEntity;
+
+    public static final Object lockObj = new Object();
+
+
+
+    @Resource(name = "caffeineCacheCode")
+    private Cache<String, String> caffeineCacheCode;
+
 //    static ReentrantLock taskb5Lock = new ReentrantLock();
 //
 //    @Scheduled(fixedDelay = 10000)
@@ -425,5 +425,5 @@
 //            taskb1Lock.unlock();
 //        }
 //    }
-//
-//}
+
+}

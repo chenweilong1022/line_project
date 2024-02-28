@@ -55,6 +55,11 @@ public class CdMaterialDTO extends PageParam implements Serializable {
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
+	private Integer type;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
 	private Integer materialNumber;
 	/**
 	 *

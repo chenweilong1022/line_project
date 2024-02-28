@@ -1,6 +1,8 @@
 package io.renren.modules.ltt.service.impl;
 
 import io.renren.datasources.annotation.Game;
+import io.renren.modules.ltt.dto.CanSendListByGroupTaskIdDTO;
+import io.renren.modules.ltt.vo.CanSendListByGroupTaskIdVO;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -17,6 +19,7 @@ import io.renren.modules.ltt.conver.CdMaterialPhoneConver;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 
 @Service("cdMaterialPhoneService")
@@ -57,6 +60,11 @@ public class CdMaterialPhoneServiceImpl extends ServiceImpl<CdMaterialPhoneDao, 
     @Override
     public boolean removeByIds(Collection<? extends Serializable> ids) {
         return super.removeByIds(ids);
+    }
+
+    @Override
+    public List<CanSendListByGroupTaskIdVO> canSendListByGroupTaskId(CanSendListByGroupTaskIdDTO dto) {
+        return baseMapper.canSendListByGroupTaskId(dto);
     }
 
 }

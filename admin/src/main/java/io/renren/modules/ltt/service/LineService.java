@@ -35,4 +35,13 @@ public interface LineService {
     SyncContentsResultVO syncContentsResult(SyncContentsResultDTO syncContentsResultDTO);
 //    http://137.184.112.207:22117/api/v1/work/getChats
     GetChatsVO getChats(GetChatsDTO getChatsDTO);
+    RegisterResultVO createThread(CreateThreadDTO createThreadDTO);
+
+    CreateThreadResultVO createThreadResult(RegisterResultDTO registerResultDTO);
+
+    ShareTextMsgVO shareTextMsg(ShareTextMsgDTO shareTextMsgDTO);
+
+    EncryptedAccessTokenVO encryptedAccessToken(EncryptedAccessTokenDTO dto);
+
+    ShareImgMsgVO shareImgMsg(ShareImgMsgDTO shareImgMsgDTO);
 }

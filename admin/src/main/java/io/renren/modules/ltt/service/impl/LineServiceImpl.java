@@ -88,7 +88,7 @@ public class LineServiceImpl implements LineService {
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
             String getPhoneHttp = String.format("%s/api/v1/account/refreshAccessToken",projectWorkEntity.getLineBaseHttp());
             String jsonStr = JSONUtil.toJsonStr(issueLiffViewDTO);
-            String resp = HttpUtil.post(getPhoneHttp, jsonStr);
+            String resp = HttpUtil.post(getPhoneHttp, jsonStr,20000);
             RefreshAccessTokenVO registerResultVO = JSON.parseObject(resp, RefreshAccessTokenVO.class);
             extracted(jsonStr, resp);
             return registerResultVO;
@@ -183,7 +183,7 @@ public class LineServiceImpl implements LineService {
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
             String getPhoneHttp = String.format("%s/api/v1/work/createGroupMax",projectWorkEntity.getLineBaseHttp());
             String jsonStr = JSONUtil.toJsonStr(createGroupMax);
-            String resp = HttpUtil.post(getPhoneHttp, jsonStr);
+            String resp = HttpUtil.post(getPhoneHttp, jsonStr,20000);
             LineRegisterVO lineRegisterVO = JSON.parseObject(resp, LineRegisterVO.class);
 
             extracted(jsonStr, resp);
@@ -268,7 +268,7 @@ public class LineServiceImpl implements LineService {
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
             String getPhoneHttp = String.format("%s/api/v1/account/openAppResult",projectWorkEntity.getLineBaseHttp());
             String jsonStr = JSONUtil.toJsonStr(registerResultDTO);
-            String resp = HttpUtil.post(getPhoneHttp,jsonStr);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
             OpenAppResult openAppResult = JSON.parseObject(resp, OpenAppResult.class);
             if (!resp.contains("正在运行")) {
                 extracted(jsonStr, resp);
@@ -286,7 +286,7 @@ public class LineServiceImpl implements LineService {
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
             String getPhoneHttp = String.format("%s/api/v1/work/syncContents",projectWorkEntity.getLineBaseHttp());
             String jsonStr = JSONUtil.toJsonStr(syncContentsDTO);
-            String resp = HttpUtil.post(getPhoneHttp,jsonStr);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
 
             LineRegisterVO lineRegisterVO = JSON.parseObject(resp, LineRegisterVO.class);
             extracted(jsonStr, resp);
@@ -303,10 +303,13 @@ public class LineServiceImpl implements LineService {
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
             String getPhoneHttp = String.format("%s/api/v1/work/syncContentsResult",projectWorkEntity.getLineBaseHttp());
             String jsonStr = JSONUtil.toJsonStr(syncContentsResultDTO);
-            String resp = HttpUtil.post(getPhoneHttp,jsonStr);
-
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
+            log.info("syncContentsResult resp = {}",resp);
             SyncContentsResultVO syncContentsResultVO = JSON.parseObject(resp, SyncContentsResultVO.class);
-            extracted(jsonStr, resp);
+//            SyncContentsResultVO syncContentsResultVO1 = new SyncContentsResultVO();
+//            syncContentsResultVO1.setCode(syncContentsResultVO.getCode());
+//            syncContentsResultVO1.setMsg(syncContentsResultVO.getMsg());
+//            extracted(jsonStr, JSONUtil.toJsonStr(syncContentsResultVO1));
             return syncContentsResultVO;
         }catch (Exception e) {
             log.error("err = {}",e.getMessage());
@@ -329,6 +332,93 @@ public class LineServiceImpl implements LineService {
             log.error("err = {}",e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public RegisterResultVO createThread(CreateThreadDTO createThreadDTO) {
+        try {
+            ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+            String getPhoneHttp = String.format("%s/api/v1/msg/createThread",projectWorkEntity.getLineBaseHttp());
+            String jsonStr = JSONUtil.toJsonStr(createThreadDTO);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
+
+            RegisterResultVO syncContentsResultVO = JSON.parseObject(resp, RegisterResultVO.class);
+            extracted(jsonStr, resp);
+            return syncContentsResultVO;
+        }catch (Exception e) {
+            log.error("err = {}",e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public CreateThreadResultVO createThreadResult(RegisterResultDTO registerResultDTO) {
+        try {
+            ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+            String getPhoneHttp = String.format("%s/api/v1/msg/createThreadResult",projectWorkEntity.getLineBaseHttp());
+            String jsonStr = JSONUtil.toJsonStr(registerResultDTO);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
+
+            CreateThreadResultVO syncContentsResultVO = JSON.parseObject(resp, CreateThreadResultVO.class);
+            extracted(jsonStr, resp);
+            return syncContentsResultVO;
+        }catch (Exception e) {
+            log.error("err = {}",e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ShareTextMsgVO shareTextMsg(ShareTextMsgDTO shareTextMsgDTO) {
+        try {
+            ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+            String getPhoneHttp = String.format("%s/api/v1/msg/shareTextMsg",projectWorkEntity.getLineBaseHttp());
+            String jsonStr = JSONUtil.toJsonStr(shareTextMsgDTO);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
+
+            ShareTextMsgVO syncContentsResultVO = JSON.parseObject(resp, ShareTextMsgVO.class);
+            extracted(jsonStr, resp);
+            return syncContentsResultVO;
+        }catch (Exception e) {
+            log.error("err = {}",e.getMessage());
+            return new ShareTextMsgVO().setCode(201);
+        }
+    }
+
+    @Override
+    public EncryptedAccessTokenVO encryptedAccessToken(EncryptedAccessTokenDTO dto) {
+        try {
+            ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+            String getPhoneHttp = String.format("%s/api/v1/msg/encryptedAccessToken",projectWorkEntity.getLineBaseHttp());
+            String jsonStr = JSONUtil.toJsonStr(dto);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
+
+            EncryptedAccessTokenVO syncContentsResultVO = JSON.parseObject(resp, EncryptedAccessTokenVO.class);
+            extracted(jsonStr, resp);
+            return syncContentsResultVO;
+        }catch (Exception e) {
+            log.error("err = {}",e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ShareImgMsgVO shareImgMsg(ShareImgMsgDTO shareImgMsgDTO) {
+        try {
+            ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
+            String getPhoneHttp = String.format("%s/api/v1/msg/shareImgMsg",projectWorkEntity.getLineBaseHttp());
+            String jsonStr = JSONUtil.toJsonStr(shareImgMsgDTO);
+            String resp = HttpUtil.post(getPhoneHttp,jsonStr,20000);
+
+            shareImgMsgDTO.setImgData("");
+            String jsonStr1 = JSONUtil.toJsonStr(shareImgMsgDTO);
+            ShareImgMsgVO syncContentsResultVO = JSON.parseObject(resp, ShareImgMsgVO.class);
+            extracted(jsonStr1, resp);
+            return syncContentsResultVO;
+        }catch (Exception e) {
+            log.error("err = {}",e.getMessage());
+            return new ShareImgMsgVO().setCode(201);
+        }
     }
 
     @EventListener

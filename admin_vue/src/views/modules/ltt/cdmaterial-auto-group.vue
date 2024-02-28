@@ -6,7 +6,7 @@
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="200px">
 
-    <el-form-item label="拉群限制" prop="accountGroupRestrictions">
+    <el-form-item label="限制人数" prop="accountGroupRestrictions">
       <el-input v-model="dataForm.accountGroupRestrictions" placeholder=""></el-input>
     </el-form-item>
 
@@ -14,7 +14,7 @@
       <el-input v-model="dataForm.numberSingleGroups" placeholder=""></el-input>
     </el-form-item>
 
-      <el-form-item  label="拉群账号的国家">
+      <el-form-item  label="账号国家">
         <el-select v-model="countryCode" placeholder="国家" clearable>
           <el-option
             v-for="item in countryCodeOptions"

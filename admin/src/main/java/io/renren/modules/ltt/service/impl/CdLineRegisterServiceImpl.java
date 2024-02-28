@@ -206,6 +206,14 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
         this.update(registerEntityUpdateWrapper);
     }
 
+    @Override
+    public boolean unLock(Integer id) {
+        CdLineRegisterDTO lineRegisterDTO = new CdLineRegisterDTO();
+        lineRegisterDTO.setId(id);
+        lineRegisterDTO.setRegisterStatus(RegisterStatus.RegisterStatus10.getKey());
+        return this.updateById(lineRegisterDTO);
+    }
+
     private static void init() {
         //设置velocity资源加载器
         Properties prop = new Properties();

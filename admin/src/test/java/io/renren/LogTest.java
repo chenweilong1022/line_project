@@ -1,10 +1,7 @@
 package io.renren;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
+import cn.hutool.core.util.*;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -18,10 +15,7 @@ import java.io.*;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,7 +37,18 @@ public class LogTest {
         return null;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+
+        List<String> strings = RuntimeUtil.execForLines("curl --socks5 43.159.18.174:24270 ipinfo.io");
+        for (String string : strings) {
+            if (string.toLowerCase().contains("country") && string.toLowerCase().contains("th")) {
+                System.out.println(string);
+            }
+        }
+
+    }
+
+    public static void main10(String[] args) throws IOException {
 
         String[] old = FileUtil.readLines("/Users/chenweilong/Downloads/27884-泰国卡充值2.txt");
         Set<String> oldSet = new HashSet<>();

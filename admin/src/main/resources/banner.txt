@@ -363,33 +363,35 @@ video_profile
 
 
 
-"818051800279": {
-                "contact": {
-                    "mid": "ue07b6b4c61f3ab329962b2e1e69e6d48",
-                    "createdTime": 1702281819427,
-                    "type": "PHONE",
-                    "status": "FRIEND",
-                    "relation": "ONEWAY",
-                    "displayName": "若狭久子",
-                    "phoneticName": "",
-                    "pictureStatus": "0hf0CytXkZOR9-ACp1SYpGSEJFN3IJLj9XBjJ3fwgHNCoBN34eQDYle1gIbyhQY30dQjJxcQ8HMipa",
-                    "thumbnailUrl": "",
-                    "statusMessage": "􀔂􀄺ハロウィン􏿿",
-                    "displayNameOverridden": "",
-                    "favoriteTime": 0,
-                    "capableVoiceCall": false,
-                    "capableVideoCall": false,
-                    "capableMyhome": false,
-                    "capableBuddy": false,
-                    "attributes": 0,
-                    "settings": 0,
-                    "picturePath": "/0hf0CytXkZOR9-ACp1SYpGSEJFN3IJLj9XBjJ3fwgHNCoBN34eQDYle1gIbyhQY30dQjJxcQ8HMipa",
-                    "recommendParams": "",
-                    "friendRequestStatus": "NONE",
-                    "musicProfile": "",
-                    "videoProfile": ""
-                },
-                "luid": "DFBDCACE-9CEA-4BC9-BCAB-99D9999E9FBD:ABPerson",
-                "contactType": "PHONE",
-                "contactKey": "818051800279"
-            }
+curl --socks5 43.159.18.174:24270 ipinfo.io
+
+curl --socks5 def:def@192.168.40.230:25005
+
+CREATE TABLE `cd_speech_skills` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `order_index` int(11) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `cd_material_phone_send_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_task_id` int(11) DEFAULT NULL,
+  `line_register_id` int(11) DEFAULT NULL,
+  `material_id` int(11) DEFAULT NULL,
+  `contact_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `mid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `mid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `mid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `send_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `send_type` int(11) DEFAULT NULL,
+  `send_status` int(11) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `err_msg` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
