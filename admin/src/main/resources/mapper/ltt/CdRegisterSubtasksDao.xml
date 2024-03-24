@@ -17,16 +17,17 @@
 
     <select id="groupByTaskId" resultType="io.renren.modules.ltt.entity.CdRegisterSubtasksEntity">
         SELECT
-            task_id as taskId,
-            MIN( id ) as id,
-            MAX( number_registrations ) as numberRegistrations,
-            MAX( registration_status ) as registrationStatus
+            task_id AS taskId,
+            id AS id,
+            number_registrations AS numberRegistrations,
+            registration_status AS registrationStatus
         FROM
             cd_register_subtasks
         WHERE
             registration_status IN ( 1, 2 )
-        GROUP BY
-            task_id
+        ORDER BY
+            registration_status DESC
+            LIMIT 4
     </select>
 
 

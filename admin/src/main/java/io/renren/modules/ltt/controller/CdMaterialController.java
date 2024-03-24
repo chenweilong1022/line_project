@@ -96,6 +96,20 @@ public class CdMaterialController {
     }
 
     /**
+     * 保存
+     */
+    @RequestMapping("/exportSy")
+    @RequiresPermissions("ltt:cdmaterial:save")
+    public void exportSy(CdMaterialDTO cdMaterial, HttpServletResponse response) throws IOException {
+        byte[] bytes = cdMaterialService.exportSy(cdMaterial);
+        response.reset();
+        response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s.txt\"",java.net.URLEncoder.encode("导出手机号","UTF-8")));
+        response.addHeader("Content-Length", "" + bytes.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+        IOUtils.write(bytes, response.getOutputStream());
+    }
+
+    /**
      * 修改
      */
     @RequestMapping("/update")

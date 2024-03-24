@@ -30,7 +30,14 @@ public class AutoAssignGroupsDTO {
     @ApiModelProperty(required=false,value="")
     private String countryCode;
     /**
+     * 群名称
+     */
+    @ApiModelProperty(required=false,value="")
+    private String groupName;
+    /**
      * 拉群id
      */
     Integer id;
+
+    List<Integer> ids;
 }

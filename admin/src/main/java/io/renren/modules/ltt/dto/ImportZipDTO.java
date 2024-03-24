@@ -2,6 +2,8 @@ package io.renren.modules.ltt.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author liuyuchan
  * @email liuyuchan286@gmail.com
@@ -13,5 +15,6 @@ public class ImportZipDTO {
      * 拉群id
      */
     Integer id;
+    List<Integer> ids;
 
 }

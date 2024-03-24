@@ -17,6 +17,7 @@ public enum GroupStatus implements BaseEnum {
     GroupStatus7(7,"同步通讯录成功"),
     GroupStatus8(8,"同步通讯录失败"),
     GroupStatus9(9,"群人数同步"),
+    GroupStatus10(10,"群人数同步失败"),
     ;
 
     GroupStatus(int key, String value) {

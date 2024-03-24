@@ -34,8 +34,8 @@ public class TaskConfig {
     public ThreadPoolTaskExecutor poolExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         //设置线程池参数信息
-        taskExecutor.setCorePoolSize(30);
-        taskExecutor.setMaxPoolSize(50);
+        taskExecutor.setCorePoolSize(100);
+        taskExecutor.setMaxPoolSize(200);
         taskExecutor.setQueueCapacity(200);
         taskExecutor.setKeepAliveSeconds(60);
         taskExecutor.setThreadNamePrefix("myExecutor2--");

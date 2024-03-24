@@ -8,7 +8,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-
+//AppVersion:  "14.3.1",
+//Ab:          "2024.307.2034",
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class},scanBasePackages = {"io.renren"})
 @EnableScheduling
 public class

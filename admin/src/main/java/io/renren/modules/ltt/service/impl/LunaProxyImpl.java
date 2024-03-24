@@ -79,6 +79,9 @@ public class LunaProxyImpl implements ProxyService {
             //如果失效了，并且不是泰国ip 去更换ip
             boolean proxyUse = isProxyUse(proxy);
             if (proxyUse) {
+                if (proxy.contains("socks5://")) {
+                    return proxy;
+                }
                 return String.format("socks5://%s", proxy);
             }
         }
@@ -92,6 +95,9 @@ public class LunaProxyImpl implements ProxyService {
             if (StrUtil.isEmpty(ip)) {
                 return ip;
             }
+            if (ip.contains("socks5://")) {
+                return ip;
+            }
             return String.format("socks5://%s", ip);
         }else if (ProxyStatus.ProxyStatus3.getKey().equals(projectWorkEntity.getProxy())) {
             if (StrUtil.isNotEmpty(cdLineRegisterEntity.getProxy())) {
@@ -99,6 +105,9 @@ public class LunaProxyImpl implements ProxyService {
             }
             String ip = getflowip2();
             if (StrUtil.isEmpty(ip)) {
+                return ip;
+            }
+            if (ip.contains("socks5://")) {
                 return ip;
             }
             String format = String.format("socks5://%s", ip);
@@ -131,6 +140,9 @@ public class LunaProxyImpl implements ProxyService {
         log.info("proxy = {}","lunaproxy");
         if (StrUtil.isEmpty(ip)) {
             log.info("proxy = {}","lunaproxy empty");
+            if (ip.contains("socks5://")) {
+                return ip;
+            }
             return ip;
         }
         //更新代理ip
@@ -139,6 +151,9 @@ public class LunaProxyImpl implements ProxyService {
         update.setProxy(ip);
         cdLineRegisterService.updateById(update);
         log.info("proxy = {} ip = {}","lunaproxy",ip);
+        if (ip.contains("socks5://")) {
+            return ip;
+        }
         return String.format("socks5://%s", ip);
     }
 

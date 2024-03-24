@@ -10,6 +10,10 @@
       <el-input v-model="dataForm.accountGroupRestrictions" placeholder=""></el-input>
     </el-form-item>
 
+    <el-form-item label="群名称" prop="groupName">
+      <el-input v-model="dataForm.groupName" placeholder=""></el-input>
+    </el-form-item>
+
     <el-form-item label="单个群需要多少人" prop="numberSingleGroups">
       <el-input v-model="dataForm.numberSingleGroups" placeholder=""></el-input>
     </el-form-item>
@@ -51,10 +55,12 @@
         visible: false,
         dataForm: {
           id: 0,
+          ids: [],
           remark: '',
           uploadNumber: '',
           synchronizationsNumber: '',
           accountGroupRestrictions: '',
+          groupName: '',
           numberSingleGroups: '',
           successesNumber: '',
           failuresNumber: '',
@@ -95,8 +101,8 @@
       handleAvatarSuccess1 (res, file) {
         this.dataForm.navyUrl = res.data
       },
-      init (id) {
-        this.dataForm.id = id || 0
+      init (ids) {
+        this.dataForm.ids = ids
         this.visible = true
       },
       // 表单提交
@@ -109,8 +115,10 @@
               method: 'post',
               data: this.$http.adornData({
                 'id': this.dataForm.id,
+                'ids': this.dataForm.ids,
                 'accountGroupRestrictions': this.dataForm.accountGroupRestrictions,
                 'numberSingleGroups': this.dataForm.numberSingleGroups,
+                'groupName': this.dataForm.groupName,
                 'countryCode': this.countryCode
               })
             }).then(({data}) => {

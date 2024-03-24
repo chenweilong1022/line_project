@@ -2,12 +2,14 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.remark" placeholder="参数名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('ltt:cdmaterial:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('ltt:cdmaterial:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button v-if="isAuth('ltt:cdmaterial:delete')" type="danger" @click="exportHandle()" :disabled="dataListSelections.length <= 0">批量导出</el-button>
+        <el-button v-if="isAuth('ltt:cdmaterial:delete')" type="danger" @click="autoGroupHandle()" :disabled="dataListSelections.length <= 0">批量开始</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -94,7 +96,7 @@
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
       :current-page="pageIndex"
-      :page-sizes="[10, 20, 50, 100]"
+      :page-sizes="[10, 20, 50, 100,200,300,500,600]"
       :page-size="pageSize"
       :total="totalPage"
       layout="total, sizes, prev, pager, next, jumper">
@@ -114,7 +116,7 @@
     data () {
       return {
         dataForm: {
-          key: ''
+          remark: ''
         },
         dataList: [],
         pageIndex: 1,
@@ -145,7 +147,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
-            'key': this.dataForm.key
+            'remark': this.dataForm.remark
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
@@ -184,7 +186,10 @@
       autoGroupHandle (id) {
         this.autoGroupVisible = true
         this.$nextTick(() => {
-          this.$refs.autoGroup.init(id)
+          var ids = this.dataListSelections.map(item => {
+            return item.id
+          })
+          this.$refs.autoGroup.init(ids)
         })
       },
       // 新增 / 修改
@@ -192,6 +197,19 @@
         this.importZipVisible = true
         this.$nextTick(() => {
           this.$refs.importZip.init(id)
+        })
+      },
+      // 导出
+      exportHandle (id) {
+        var ids = id ? [id] : this.dataListSelections.map(item => {
+          return item.id
+        })
+        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          window.open(this.$http.adornUrl(`/ltt/cdmaterial/importZip?token=${this.$cookie.get('token')}&ids=${ids}`))
         })
       },
       // 删除

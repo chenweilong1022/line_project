@@ -133,6 +133,7 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
         ZipOutputStream zip = new ZipOutputStream(outputStream);
 
         List<String> tokens = new ArrayList<>();
+        List<String> tokenss = new ArrayList<>();
         List<String> tokens7 = new ArrayList<>();
 
         for (CdLineRegisterEntity cdLineRegisterEntity : cdLineRegisterEntities) {
@@ -148,6 +149,8 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
                 LineTokenJson lineTokenJson = JSON.parseObject(cdLineRegisterEntity.getToken(), LineTokenJson.class);
                 String format = String.format("%s----%s----%s----%s----%s----%s\n", "66", lineTokenJson.getPhone().replaceFirst("66",""), lineTokenJson.getPassword(), lineTokenJson.getMid(), lineTokenJson.getAccessToken(), lineTokenJson.getRefreshToken());
                 tokens.add(format);
+
+                tokenss.add(cdLineRegisterEntity.getToken());
 
                 String format7 = String.format("%s----%s----%s----%s----%s----%s----%s\n", "66", lineTokenJson.getPhone().replaceFirst("66",""), lineTokenJson.getPassword(), lineTokenJson.getMid(), lineTokenJson.getAccessToken(), lineTokenJson.getRefreshToken(),lineTokenJson.getAuthToken());
                 tokens7.add(format7);
@@ -190,6 +193,23 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
             zip.putNextEntry(new ZipEntry(packagePath7));
             IOUtils.write(sw7.toString(), zip, "UTF-8");
             IOUtils.closeQuietly(sw7);
+            zip.closeEntry();
+
+
+
+            //封装模板数据
+            Map<String, Object> mapTokenss = new HashMap<>();
+            mapTokenss.put("columns", tokenss);
+            VelocityContext contextTokens = new VelocityContext(mapTokenss);
+            //渲染模板
+            StringWriter swTokens = new StringWriter();
+            Template tplTokens = Velocity.getTemplate("template/tokens.txt.vm", "UTF-8" );
+            tplTokens.merge(contextTokens, swTokens);
+
+            String packagePathTokens = String.format("token/%s.txt","tokenss");
+            zip.putNextEntry(new ZipEntry(packagePathTokens));
+            IOUtils.write(swTokens.toString(), zip, "UTF-8");
+            IOUtils.closeQuietly(swTokens);
             zip.closeEntry();
         }catch (IOException e) {
         }

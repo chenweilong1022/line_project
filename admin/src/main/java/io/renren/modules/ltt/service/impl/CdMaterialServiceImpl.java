@@ -1,26 +1,21 @@
 package io.renren.modules.ltt.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
-import io.renren.common.utils.DateUtils;
 import io.renren.common.validator.Assert;
 import io.renren.datasources.annotation.Game;
-import io.renren.modules.ltt.conver.CdMaterialPhoneConver;
 import io.renren.modules.ltt.dto.AutoAssignGroupsDTO;
 import io.renren.modules.ltt.dto.ImportZipDTO;
 import io.renren.modules.ltt.entity.CdGroupTasksEntity;
 import io.renren.modules.ltt.entity.CdLineRegisterEntity;
 import io.renren.modules.ltt.entity.CdMaterialPhoneEntity;
 import io.renren.modules.ltt.enums.*;
-import io.renren.modules.ltt.service.CdGroupTasksService;
-import io.renren.modules.ltt.service.CdLineRegisterService;
-import io.renren.modules.ltt.service.CdMaterialPhoneService;
+import io.renren.modules.ltt.service.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -37,7 +32,6 @@ import io.renren.modules.ltt.dao.CdMaterialDao;
 import io.renren.modules.ltt.entity.CdMaterialEntity;
 import io.renren.modules.ltt.dto.CdMaterialDTO;
 import io.renren.modules.ltt.vo.CdMaterialVO;
-import io.renren.modules.ltt.service.CdMaterialService;
 import io.renren.modules.ltt.conver.CdMaterialConver;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,13 +51,16 @@ public class CdMaterialServiceImpl extends ServiceImpl<CdMaterialDao, CdMaterial
     @Autowired
     private CdLineRegisterService cdLineRegisterService;
     @Autowired
+    private LineService lineService;
+    @Autowired
     private CdGroupTasksService cdGroupTasksService;
 
     @Override
     public PageUtils<CdMaterialVO> queryPage(CdMaterialDTO cdMaterial) {
         IPage<CdMaterialEntity> page = baseMapper.selectPage(
                 new Query<CdMaterialEntity>(cdMaterial).getPage(),
-                new QueryWrapper<CdMaterialEntity>()
+                new QueryWrapper<CdMaterialEntity>().lambda()
+                        .like(StrUtil.isNotEmpty(cdMaterial.getRemark()),CdMaterialEntity::getRemark,cdMaterial.getRemark())
         );
 
         return PageUtils.<CdMaterialVO>page(page).setList(CdMaterialConver.MAPPER.conver(page.getRecords()));
@@ -73,6 +70,34 @@ public class CdMaterialServiceImpl extends ServiceImpl<CdMaterialDao, CdMaterial
         return CdMaterialConver.MAPPER.conver(baseMapper.selectById(id));
     }
 
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public byte[] exportSy(CdMaterialDTO cdMaterial) {
+        //料子数据
+        String materialText = HttpUtil.downloadString(cdMaterial.getMaterialUrl(), "UTF-8");
+        String[] materialTextSplit = materialText.split("\n");
+        Assert.isTrue(ArrayUtil.isEmpty(materialTextSplit),"txt不能为空");
+
+        List<CdMaterialPhoneEntity> cdMaterialPhoneEntities1 = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda());
+        Set<String> collect = cdMaterialPhoneEntities1.stream().map(CdMaterialPhoneEntity::getContactKey).collect(Collectors.toSet());
+        List<String> materialTextS = new ArrayList<>();
+        for (String s : materialTextSplit) {
+            s = s.replace("\r","").trim();
+            String[] split = s.split("\t");
+            if (split.length > 1) {
+                s = split[0].trim();
+            }
+            if (collect.contains(s)) {
+            }else {
+                materialTextS.add(s);
+            }
+        }
+        String collectByte = materialTextS.stream().map(phone -> phone + "\n").collect(Collectors.joining());
+        return StrUtil.bytes(collectByte);
+    }
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean save(CdMaterialDTO cdMaterial) {
@@ -80,72 +105,135 @@ public class CdMaterialServiceImpl extends ServiceImpl<CdMaterialDao, CdMaterial
         String materialText = HttpUtil.downloadString(cdMaterial.getMaterialUrl(), "UTF-8");
         String[] materialTextSplit = materialText.split("\n");
         Assert.isTrue(ArrayUtil.isEmpty(materialTextSplit),"txt不能为空");
-        //水军数据
-        String navyText = HttpUtil.downloadString(cdMaterial.getNavyUrl(), "UTF-8");
-        String[] navyTextSplit = navyText.split("\n");
-        Assert.isTrue(ArrayUtil.isEmpty(navyTextSplit),"txt不能为空");
-        Integer uploadNumber = navyTextSplit.length + materialTextSplit.length;
-        //总上传
-        cdMaterial.setUploadNumber(uploadNumber);
-        //料子数量
-        cdMaterial.setMaterialNumber(materialTextSplit.length);
-        //水军数量
-        cdMaterial.setNavyNumber(navyTextSplit.length);
-        cdMaterial.setSuccessesNumber(0);
-        cdMaterial.setFailuresNumber(0);
-        cdMaterial.setSynchronizationsNumber(0);
-        cdMaterial.setCreateTime(DateUtil.date());
-        cdMaterial.setDeleteFlag(DeleteFlag.NO.getKey());
-        CdMaterialEntity cdMaterialEntity = CdMaterialConver.MAPPER.converDTO(cdMaterial);
-        boolean save = this.save(cdMaterialEntity);
+
+        //已经存在的
+        List<CdMaterialPhoneEntity> cdMaterialPhoneEntities1 = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda());
+        Set<String> collect = cdMaterialPhoneEntities1.stream().map(CdMaterialPhoneEntity::getContactKey).collect(Collectors.toSet());
+        //不存在的
+        Set<String> materialTextS = new HashSet<>();
+        for (String s : materialTextSplit) {
+            s = s.replace("\r","").trim();
+            String[] split = s.split("\t");
+            if (split.length > 1) {
+                s = split[0].trim();
+            }
+            if (collect.contains(s)) {
+            }else {
+                materialTextS.add(s);
+            }
+        }
+
+        //将料子分组多个数据
+//        List<String> materialTextS = Arrays.asList(materialTextSplit);
+
+
+        //水军分组
+        List<String> navyUrlList = cdMaterial.getNavyUrlList();
+
         List<CdMaterialPhoneEntity> cdMaterialPhoneEntities = new ArrayList<>();
 
-        for (String string : materialTextSplit) {
-            string = string.replace("\r","").trim();
-            String[] split = string.split("\t");
-            CdMaterialPhoneEntity cdMaterialPhoneEntity = new CdMaterialPhoneEntity();
-            cdMaterialPhoneEntity.setMaterialId(cdMaterialEntity.getId());
-            if (split.length > 1) {
-                cdMaterialPhoneEntity.setContactKey(split[0].trim());
-                cdMaterialPhoneEntity.setMid(split[1].trim());
-            }else {
-                cdMaterialPhoneEntity.setContactKey(string);
+        //水军下载的url
+        String navyUrl= navyUrlList.get(0);
+        //水军数据
+        String navyText = HttpUtil.downloadString(navyUrl, "UTF-8");
+        String[] navyTextSplit = navyText.split("\n");
+        Assert.isTrue(ArrayUtil.isEmpty(navyTextSplit),"txt不能为空");
+
+        String groupName = navyTextSplit[0];
+
+        int onlySize = 99 - (navyTextSplit.length - 1);
+        List<List<String>> materialTextSplitList = Lists.partition(materialTextS.stream().collect(Collectors.toList()), onlySize);
+
+        for (int i = 0; i < materialTextSplitList.size(); i++){
+
+
+//            if (i > materialTextSplitList.size() - 1) {
+//                continue;
+//            }
+            List<String> materialTextSplitListGeti = materialTextSplitList.get(i);
+            if (materialTextSplitListGeti.size() < onlySize) {
+                continue;
             }
+            Integer uploadNumber = navyTextSplit.length - 1 + materialTextSplitListGeti.size();
+            //总上传
+            cdMaterial.setUploadNumber(uploadNumber);
+            //料子数量
+            cdMaterial.setMaterialNumber(materialTextSplit.length);
+            //水军数量
+            cdMaterial.setNavyNumber(navyTextSplit.length - 1);
+            cdMaterial.setSuccessesNumber(0);
+            cdMaterial.setFailuresNumber(0);
+            cdMaterial.setSynchronizationsNumber(0);
+            cdMaterial.setCreateTime(DateUtil.date());
+            cdMaterial.setDeleteFlag(DeleteFlag.NO.getKey());
+            String remark = cdMaterial.getRemark();
+            if (!remark.contains(groupName)) {
+                remark = String.format("%s#%s",remark,groupName);
+            }
+            cdMaterial.setRemark(remark);
+            CdMaterialEntity cdMaterialEntity = CdMaterialConver.MAPPER.converDTO(cdMaterial);
+            boolean save = this.save(cdMaterialEntity);
 
-            cdMaterialPhoneEntity.setMaterialType(MaterialType.MaterialType1.getKey());
-            cdMaterialPhoneEntity.setCreateTime(DateUtil.date());
-            cdMaterialPhoneEntity.setDeleteFlag(DeleteFlag.NO.getKey());
-            cdMaterialPhoneEntities.add(cdMaterialPhoneEntity);
-        }
-
-        for (String string : navyTextSplit) {
-            string = string.replace("\r","").trim();
-            if (StrUtil.isNotEmpty(string)) {
+            for (String string : materialTextSplitListGeti) {
+                string = string.replace("\r","").trim();
+                String[] split = string.split("\t");
                 CdMaterialPhoneEntity cdMaterialPhoneEntity = new CdMaterialPhoneEntity();
                 cdMaterialPhoneEntity.setMaterialId(cdMaterialEntity.getId());
-                cdMaterialPhoneEntity.setGroupTaskId(-1);
-                cdMaterialPhoneEntity.setContactKey(string);
-                cdMaterialPhoneEntity.setMaterialType(MaterialType.MaterialType2.getKey());
+                if (split.length > 1) {
+                    cdMaterialPhoneEntity.setContactKey(split[0].trim());
+                    cdMaterialPhoneEntity.setMid(split[1].trim());
+                }else {
+                    cdMaterialPhoneEntity.setContactKey(string);
+                }
+                cdMaterialPhoneEntity.setMaterialType(MaterialType.MaterialType1.getKey());
                 cdMaterialPhoneEntity.setCreateTime(DateUtil.date());
                 cdMaterialPhoneEntity.setDeleteFlag(DeleteFlag.NO.getKey());
+                if (StrUtil.isEmpty(cdMaterialPhoneEntity.getContactKey())) {
+                    continue;
+                }
                 cdMaterialPhoneEntities.add(cdMaterialPhoneEntity);
             }
-        }
 
-        List<List<CdMaterialPhoneEntity>> partition = Lists.partition(cdMaterialPhoneEntities, 1000);
-        List<CdMaterialPhoneEntity> cdMaterialPhoneEntities2 = new ArrayList<>();
-        for (List<CdMaterialPhoneEntity> materialPhoneEntities : partition) {
-            List<String> contactKeys = materialPhoneEntities.stream().map(CdMaterialPhoneEntity::getContactKey).collect(Collectors.toList());
-            List<CdMaterialPhoneEntity> list = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda().in(CdMaterialPhoneEntity::getContactKey,contactKeys));
-            Map<String, CdMaterialPhoneEntity> stringCdMaterialPhoneEntityMap = list.stream().collect(Collectors.toMap(CdMaterialPhoneEntity::getContactKey, item -> item));
-            for (CdMaterialPhoneEntity materialPhoneEntity : materialPhoneEntities) {
-                if (!stringCdMaterialPhoneEntityMap.containsKey(materialPhoneEntity.getContactKey())) {
-                    cdMaterialPhoneEntities2.add(materialPhoneEntity);
+            for (String string : navyTextSplit) {
+                string = string.replace("\r","").trim();
+                if (string.toLowerCase().contains("binance")) {
+                    continue;
+                }
+                if (StrUtil.isNotEmpty(string)) {
+                    CdMaterialPhoneEntity cdMaterialPhoneEntity = new CdMaterialPhoneEntity();
+                    cdMaterialPhoneEntity.setMaterialId(cdMaterialEntity.getId());
+                    cdMaterialPhoneEntity.setGroupTaskId(-1);
+                    cdMaterialPhoneEntity.setContactKey(string);
+                    cdMaterialPhoneEntity.setMaterialType(MaterialType.MaterialType2.getKey());
+                    cdMaterialPhoneEntity.setCreateTime(DateUtil.date());
+                    cdMaterialPhoneEntity.setDeleteFlag(DeleteFlag.NO.getKey());
+                    cdMaterialPhoneEntities.add(cdMaterialPhoneEntity);
                 }
             }
         }
-        cdMaterialPhoneService.saveBatch(cdMaterialPhoneEntities2);
-        return save;
+
+        //当前的水军
+        List<String> contactKeys = cdMaterialPhoneEntities.stream().map(CdMaterialPhoneEntity::getContactKey).collect(Collectors.toList());
+
+//        List<String> contactKeys = cdMaterialPhoneEntities.stream().map(CdMaterialPhoneEntity::getContactKey).collect(Collectors.toList());
+
+
+//        List<List<CdMaterialPhoneEntity>> partition = Lists.partition(cdMaterialPhoneEntities, 1000);
+//        List<CdMaterialPhoneEntity> cdMaterialPhoneEntities2 = new ArrayList<>();
+//
+//        for (List<CdMaterialPhoneEntity> materialPhoneEntities : partition) {
+//            List<String> contactKeys = materialPhoneEntities.stream().map(CdMaterialPhoneEntity::getContactKey).collect(Collectors.toList());
+//            List<CdMaterialPhoneEntity> list = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda().in(CdMaterialPhoneEntity::getContactKey,contactKeys));
+//            Map<String, CdMaterialPhoneEntity> stringCdMaterialPhoneEntityMap = list.stream().collect(Collectors.toMap(CdMaterialPhoneEntity::getContactKey, item -> item));
+//            for (CdMaterialPhoneEntity materialPhoneEntity : materialPhoneEntities) {
+//                if (!stringCdMaterialPhoneEntityMap.containsKey(materialPhoneEntity.getContactKey())) {
+//                    cdMaterialPhoneEntities2.add(materialPhoneEntity);
+//                }
+//            }
+//        }
+
+        cdMaterialPhoneService.saveBatch(cdMaterialPhoneEntities,20000);
+        return true;
     }
 
     @Override
@@ -164,90 +252,91 @@ public class CdMaterialServiceImpl extends ServiceImpl<CdMaterialDao, CdMaterial
         return super.removeByIds(ids);
     }
 
-    int c = 81;
+    int c = 600;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void autoAssignGroups(AutoAssignGroupsDTO cdMaterial) {
-        CdMaterialVO cdMaterialVO = this.getById(cdMaterial.getId());
-        Assert.isNull(cdMaterialVO,"不存在料子");
-        //获取 所有手机号
-        List<CdMaterialPhoneEntity> cdMaterialPhoneEntities = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda()
-                .eq(CdMaterialPhoneEntity::getMaterialId,cdMaterial.getId())
-                .eq(CdMaterialPhoneEntity::getMaterialType,MaterialType.MaterialType1.getKey())
-                .eq(CdMaterialPhoneEntity::getMaterialPhoneStatus,MaterialPhoneStatus.MaterialPhoneStatus1.getKey())
-//                .last("limit " + cdMaterial.getNumberSingleGroups() * 20)
-        );
-        //获取水军
-        List<CdMaterialPhoneEntity> cdMaterialPhoneEntities2 = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda()
-                .eq(CdMaterialPhoneEntity::getMaterialId,cdMaterial.getId())
-                .eq(CdMaterialPhoneEntity::getMaterialType,MaterialType.MaterialType2.getKey())
-        );
-        //根据数量分组 将所有的号码按照固定数量分组
-        List<List<CdMaterialPhoneEntity>> partitions = Lists.partition(cdMaterialPhoneEntities, cdMaterial.getNumberSingleGroups());
+
+        //获取200个账号
         LambdaQueryWrapper<CdLineRegisterEntity> last = new QueryWrapper<CdLineRegisterEntity>().lambda()
                 .eq(CdLineRegisterEntity::getOpenStatus, OpenStatus.OpenStatus3.getKey())
-                .in(CdLineRegisterEntity::getRegisterStatus, RegisterStatus.RegisterStatus4.getKey(), RegisterStatus.RegisterStatus7.getKey())
-                .orderByAsc(CdLineRegisterEntity::getId)
+                .in(CdLineRegisterEntity::getRegisterStatus, RegisterStatus.RegisterStatus4.getKey())
+                .orderByDesc(CdLineRegisterEntity::getId)
                 .eq(CdLineRegisterEntity::getCountryCode, cdMaterial.getCountryCode())
-                .last("limit " + partitions.size() + 10);
+                .last("limit " + 200);
 //        if (MaterialPhoneType.MaterialType1.getKey().equals(cdMaterialVO.getType())) {
 //            last.lt(CdLineRegisterEntity::getGroupCount, cdMaterial.getAccountGroupRestrictions());
 //        }
         //注册账号 状态是拉过群或者是注册成功的 拉群次数小于限制数量的账号
-        List<CdLineRegisterEntity> cdLineRegisterEntities = cdLineRegisterService.list(last);
+        List<CdLineRegisterEntity> cdLineRegisterEntities1 = cdLineRegisterService.list(last);
+
+        Queue<CdLineRegisterEntity> cdLineRegisterEntities2 = new LinkedList<>(cdLineRegisterEntities1);
+
+
+        List<CdLineRegisterEntity> cdLineRegisterEntities = new ArrayList<>();
+        List<Integer> ids = cdMaterial.getIds();
+        Assert.isTrue(CollUtil.isEmpty(ids),"不存在料子");
         List<CdMaterialPhoneEntity> cdMaterialPhoneEntitiesA = new ArrayList<>();
-//        List<CdMaterialPhoneEntity> cdMaterialPhoneEntitiesB = new ArrayList<>();
-//        List<CdGroupTasksEntity> cdGroupTasksEntities = new ArrayList<>();
-
-
-
-
-        //所有分组
-        for (int i1 = 0; i1 < partitions.size(); i1++) {
-            CdLineRegisterEntity cdLineRegisterEntity = cdLineRegisterEntities.get(i1);
-
-
-            List<CdMaterialPhoneEntity> cdMaterialPhoneEntities1 = partitions.get(i1);
-//            cdLineRegisterEntity.setGroupCount(cdLineRegisterEntity.getGroupCount() + 1);
-            cdLineRegisterEntity.setRegisterStatus(RegisterStatus.RegisterStatus7.getKey());
-            CdGroupTasksEntity cdGroupTasksEntity = new CdGroupTasksEntity();
-            String groupName = String.format("%s(%d)", "tt_group", c + 1);
-            c++;
-            cdGroupTasksEntity.setGroupName(groupName);
-            cdGroupTasksEntity.setUploadGroupNumber(cdMaterialPhoneEntities1.size());
-            cdGroupTasksEntity.setCurrentExecutionsNumber(0);
-            cdGroupTasksEntity.setSuccessfullyAttractGroupsNumber(0);
-            cdGroupTasksEntity.setGroupStatus(GroupStatus.GroupStatus1.getKey());
-            cdGroupTasksEntity.setDeleteFlag(DeleteFlag.NO.getKey());
-            cdGroupTasksEntity.setLineRegisterId(cdLineRegisterEntity.getId());
-            cdGroupTasksEntity.setAddType(AddType.AddType2.getKey());
-            cdGroupTasksEntity.setCreateTime(DateUtil.date());
-            cdGroupTasksEntity.setMaterialId(cdMaterialVO.getId());
-            cdGroupTasksEntity.setMaterialPhoneType(cdMaterialVO.getType());
-            cdGroupTasksService.save(cdGroupTasksEntity);
-            for (CdMaterialPhoneEntity cdMaterialPhoneEntity : cdMaterialPhoneEntities1) {
-                cdMaterialPhoneEntity.setLineRegisterId(cdLineRegisterEntity.getId());
-                cdMaterialPhoneEntity.setGroupTaskId(cdGroupTasksEntity.getId());
-                cdMaterialPhoneEntitiesA.add(cdMaterialPhoneEntity);
+        for (Integer id : ids) {
+            CdMaterialVO cdMaterialVO = this.getById(id);
+            String[] split = cdMaterialVO.getRemark().split("#");
+            if (split.length == 2) {
+                cdMaterial.setGroupName(split[1]);
             }
+            //获取 所有手机号
+            List<CdMaterialPhoneEntity> cdMaterialPhoneEntities = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda()
+                            .eq(CdMaterialPhoneEntity::getMaterialId,id)
+                            .eq(CdMaterialPhoneEntity::getMaterialType,MaterialType.MaterialType1.getKey())
+                            .eq(CdMaterialPhoneEntity::getMaterialPhoneStatus,MaterialPhoneStatus.MaterialPhoneStatus1.getKey())
+//                .last("limit " + cdMaterial.getNumberSingleGroups() * 20)
+            );
+            if (CollUtil.isEmpty(cdMaterialPhoneEntities)) {
+                continue;
+            }
+            //根据数量分组 将所有的号码按照固定数量分组
+            List<List<CdMaterialPhoneEntity>> partitions = Lists.partition(cdMaterialPhoneEntities, cdMaterial.getNumberSingleGroups());
 
-//            for (CdMaterialPhoneEntity cdMaterialPhoneEntity : cdMaterialPhoneEntities2) {
-//                CdMaterialPhoneEntity cdMaterialPhoneEntityCopy = CdMaterialPhoneConver.MAPPER.conver1(cdMaterialPhoneEntity);
-//                cdMaterialPhoneEntityCopy.setId(null);
-//                cdMaterialPhoneEntityCopy.setLineRegisterId(cdLineRegisterEntity.getId());
-//                cdMaterialPhoneEntityCopy.setGroupTaskId(cdGroupTasksEntity.getId());
-//                cdMaterialPhoneEntitiesB.add(cdMaterialPhoneEntityCopy);
-//            }
+            //所有分组
+            for (int i1 = 0; i1 < partitions.size(); i1++) {
+//                CdLineRegisterEntity cdLineRegisterEntity = cdLineRegisterEntities.get(i1);
+                List<CdMaterialPhoneEntity> cdMaterialPhoneEntities1 = partitions.get(i1);
+//            cdLineRegisterEntity.setGroupCount(cdLineRegisterEntity.getGroupCount() + 1);
+                //弹出执行账号
+                CdLineRegisterEntity cdLineRegisterEntity = cdLineRegisterEntities2.poll();
+                cdLineRegisterEntity.setRegisterStatus(RegisterStatus.RegisterStatus7.getKey());
+                CdGroupTasksEntity cdGroupTasksEntity = new CdGroupTasksEntity();
+                String groupName = String.format("%s-%d", cdMaterial.getGroupName(), c + 1);
+                c++;
+                cdGroupTasksEntity.setGroupName(groupName);
+                cdGroupTasksEntity.setUploadGroupNumber(cdMaterialPhoneEntities1.size());
+                cdGroupTasksEntity.setCurrentExecutionsNumber(0);
+                cdGroupTasksEntity.setSuccessfullyAttractGroupsNumber(0);
+                cdGroupTasksEntity.setGroupStatus(GroupStatus.GroupStatus1.getKey());
+                cdGroupTasksEntity.setDeleteFlag(DeleteFlag.NO.getKey());
+                cdGroupTasksEntity.setLineRegisterId(cdLineRegisterEntity.getId());
+                cdGroupTasksEntity.setAddType(AddType.AddType2.getKey());
+                cdGroupTasksEntity.setCreateTime(DateUtil.date());
+                cdGroupTasksEntity.setMaterialId(id);
+                cdGroupTasksEntity.setMaterialPhoneType(cdMaterialVO.getType());
+                cdGroupTasksService.save(cdGroupTasksEntity);
+                for (CdMaterialPhoneEntity cdMaterialPhoneEntity : cdMaterialPhoneEntities1) {
+                    cdMaterialPhoneEntity.setLineRegisterId(cdLineRegisterEntity.getId());
+                    cdMaterialPhoneEntity.setGroupTaskId(cdGroupTasksEntity.getId());
+                    cdMaterialPhoneEntitiesA.add(cdMaterialPhoneEntity);
+                }
+                cdLineRegisterEntities.add(cdLineRegisterEntity);
+            }
         }
 
-        //任务保存
-//        cdGroupTasksService.saveBatch(cdGroupTasksEntities);
-        //修改料子 保存水军
-        cdMaterialPhoneService.updateBatchById(cdMaterialPhoneEntitiesA);
-//        cdMaterialPhoneService.saveBatch(cdMaterialPhoneEntitiesB);
 
-        cdLineRegisterService.updateBatchById(cdLineRegisterEntities);
+
+
+        //任务保存
+        //修改料子 保存水军
+        cdMaterialPhoneService.updateBatchById(cdMaterialPhoneEntitiesA,8000);
+
+        cdLineRegisterService.updateBatchById(cdLineRegisterEntities,8000);
     }
 
     @Override
@@ -256,12 +345,12 @@ public class CdMaterialServiceImpl extends ServiceImpl<CdMaterialDao, CdMaterial
 
 
         List<CdGroupTasksEntity> cdGroupTasksEntities = cdGroupTasksService.list(new QueryWrapper<CdGroupTasksEntity>().lambda()
-                .eq(CdGroupTasksEntity::getMaterialId,importZipDTO.getId())
+                .in(CdGroupTasksEntity::getMaterialId,importZipDTO.getIds())
         );
 
         List<CdMaterialPhoneEntity> list = cdMaterialPhoneService.list(new QueryWrapper<CdMaterialPhoneEntity>().lambda()
-                .eq(CdMaterialPhoneEntity::getMaterialId,importZipDTO.getId())
-                .eq(CdMaterialPhoneEntity::getMaterialPhoneStatus,MaterialPhoneStatus.MaterialPhoneStatus3.getKey())
+                .in(CdMaterialPhoneEntity::getMaterialId,importZipDTO.getIds())
+                .in(CdMaterialPhoneEntity::getMaterialPhoneStatus,MaterialPhoneStatus.MaterialPhoneStatus5.getKey())
         );
 
 
@@ -276,7 +365,10 @@ public class CdMaterialServiceImpl extends ServiceImpl<CdMaterialDao, CdMaterial
         for (CdGroupTasksEntity cdGroupTasksEntity : cdGroupTasksEntities) {
 
             List<CdMaterialPhoneEntity> materialPhoneEntities = integerListMap.get(cdGroupTasksEntity.getId());
-            Integer successfullyAttractGroupsNumber = materialPhoneEntities.size();
+            if (CollUtil.isEmpty(materialPhoneEntities)) {
+                continue;
+            }
+            Integer successfullyAttractGroupsNumber = cdGroupTasksEntity.getSuccessfullyAttractGroupsNumber();
             totalSuccessfullyAttractGroupsNumber = totalSuccessfullyAttractGroupsNumber + successfullyAttractGroupsNumber;
 
             //封装模板数据

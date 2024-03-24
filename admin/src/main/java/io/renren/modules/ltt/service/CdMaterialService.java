@@ -7,6 +7,7 @@ import io.renren.modules.ltt.dto.CdMaterialDTO;
 import io.renren.modules.ltt.dto.ImportZipDTO;
 import io.renren.modules.ltt.vo.CdMaterialVO;
 import io.renren.modules.ltt.entity.CdMaterialEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -33,6 +34,10 @@ public interface CdMaterialService extends IService<CdMaterialEntity> {
      * @return
      */
     CdMaterialVO getById(Integer id);
+
+    @Transactional(rollbackFor = Exception.class)
+    byte[] exportSy(CdMaterialDTO cdMaterial);
+
     /**
      * 保存
      * @param cdMaterial
