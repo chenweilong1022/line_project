@@ -69,5 +69,7 @@ public interface CdMaterialPhoneService extends IService<CdMaterialPhoneEntity> 
      * @return
      */
     List<CanSendListByGroupTaskIdVO> canSendListByGroupTaskId(CanSendListByGroupTaskIdDTO dto);
+
+    List<CdMaterialPhoneEntity> groupByIds(List<Integer> ids);
 }
 

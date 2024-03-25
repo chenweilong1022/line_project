@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.renren.common.utils.EnumUtil;
+import io.renren.modules.ltt.enums.GroupStatus;
 import io.renren.modules.ltt.enums.MaterialPhoneType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -93,7 +94,32 @@ public class CdMaterialVO implements Serializable {
 	@ApiModelProperty(required=false,value="")
 	private Date createTime;
 
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
+	private Integer groupStatus;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
+	private Integer groupTaskId;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String groupName;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String roomId;
+
 	public String getTypeStr() {
 		return EnumUtil.queryValueByKey(this.type, MaterialPhoneType.values());
+	}
+
+	public String getGroupStatusStr() {
+		return EnumUtil.queryValueByKey(groupStatus, GroupStatus.values());
 	}
 }

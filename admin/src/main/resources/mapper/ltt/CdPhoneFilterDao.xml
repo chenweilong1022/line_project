@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="io.renren.modules.ltt.dao.CdMaterialPhoneDao">
+<mapper namespace="io.renren.modules.ltt.dao.CdPhoneFilterDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="io.renren.modules.ltt.entity.CdMaterialPhoneEntity" id="cdMaterialPhoneMap">
+    <resultMap type="io.renren.modules.ltt.entity.CdPhoneFilterEntity" id="cdPhoneFilterMap">
         <result property="id" column="id"/>
-        <result property="lineRegisterId" column="line_register_id"/>
-        <result property="materialId" column="material_id"/>
+        <result property="dataTaskId" column="data_task_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="taskStatus" column="task_status"/>
         <result property="luid" column="luid"/>
         <result property="contactType" column="contact_type"/>
         <result property="contactKey" column="contact_key"/>
@@ -34,48 +35,14 @@
         <result property="friendRequestStatus" column="friend_request_status"/>
         <result property="musicProfile" column="music_profile"/>
         <result property="videoProfile" column="video_profile"/>
-        <result property="materialType" column="material_type"/>
         <result property="deleteFlag" column="delete_flag"/>
         <result property="createTime" column="create_time"/>
-        <result property="errMsg" column="err_msg"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lineTaskId" column="line_task_id"/>
+        <result property="msg" column="msg"/>
+        <result property="groupType" column="group_type"/>
+        <result property="refreshContactStatus" column="refresh_contact_status"/>
     </resultMap>
-
-    <select id="groupByIds" resultType="io.renren.modules.ltt.entity.CdMaterialPhoneEntity">
-        SELECT
-            MIN( id ) id,
-            MIN( group_task_id ) groupTaskId,
-            material_id materialId
-        FROM
-            cd_material_phone
-        WHERE
-        group_task_id IN
-        <foreach item="id" collection="ids" open="(" separator="," close=")">
-            #{id}
-        </foreach>
-        AND material_phone_status = 1
-        GROUP BY
-            material_id
-    </select>
-
-    <select id="canSendListByGroupTaskId" resultType="io.renren.modules.ltt.vo.CanSendListByGroupTaskIdVO">
-        SELECT
-            mp.group_task_id as groupTaskId,
-            MAX( mp.id ) as materialPhoneId
-        FROM
-            cd_material_phone mp
-                LEFT JOIN cd_group_tasks gt ON gt.id = mp.group_task_id
-                LEFT JOIN cd_line_register lr ON lr.id = mp.line_register_id
-            <where>
-                gt.material_phone_type = 2
-                <if test="dto.materialPhoneStatus != null and dto.materialPhoneStatus > 0">
-                    AND mp.material_phone_status = #{dto.materialPhoneStatus}
-                </if>
-                AND gt.group_status = 7
-            </where>
-
-        GROUP BY
-            mp.group_task_id
-    </select>
 
 
 </mapper>

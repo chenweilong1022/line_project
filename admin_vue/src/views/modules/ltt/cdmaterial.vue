@@ -75,6 +75,18 @@
         label="失败数量">
       </el-table-column>
       <el-table-column
+        prop="groupStatusStr"
+        header-align="center"
+        align="center"
+        label="拉群状态">
+      </el-table-column>
+      <el-table-column
+        prop="groupName"
+        header-align="center"
+        align="center"
+        label="群名称">
+      </el-table-column>
+      <el-table-column
         prop="createTime"
         header-align="center"
         align="center"
@@ -87,6 +99,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <el-button type="text" size="small" @click="reallocateTokenHandle(scope.row.groupTaskId)">错误重试</el-button>
           <el-button type="text" size="small" @click="autoGroupHandle(scope.row.id)">自动分配</el-button>
           <el-button type="text" size="small" @click="importZipHandle(scope.row.id)">导出报表</el-button>
         </template>
@@ -210,6 +223,35 @@
           type: 'warning'
         }).then(() => {
           window.open(this.$http.adornUrl(`/ltt/cdmaterial/importZip?token=${this.$cookie.get('token')}&ids=${ids}`))
+        })
+      },
+      reallocateTokenHandle (id) {
+        var ids = id ? [id] : this.dataListSelections.map(item => {
+          return item.id
+        })
+        this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '重新分配token' : '重新分配token'}]操作?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http({
+            url: this.$http.adornUrl('/ltt/cdmaterial/reallocateToken'),
+            method: 'post',
+            data: this.$http.adornData(ids, false)
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: '操作成功',
+                type: 'success',
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList()
+                }
+              })
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
         })
       },
       // 删除

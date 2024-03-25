@@ -20,4 +20,6 @@ import java.util.List;
 public interface CdMaterialPhoneDao extends BaseMapper<CdMaterialPhoneEntity> {
 
     List<CanSendListByGroupTaskIdVO> canSendListByGroupTaskId(@Param("dto") CanSendListByGroupTaskIdDTO dto);
+
+    List<CdMaterialPhoneEntity> groupByIds(@Param("ids") List<Integer> ids);
 }

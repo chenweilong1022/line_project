@@ -67,4 +67,9 @@ public class CdMaterialPhoneServiceImpl extends ServiceImpl<CdMaterialPhoneDao, 
         return baseMapper.canSendListByGroupTaskId(dto);
     }
 
+    @Override
+    public List<CdMaterialPhoneEntity> groupByIds(List<Integer> ids) {
+        return baseMapper.groupByIds(ids);
+    }
+
 }

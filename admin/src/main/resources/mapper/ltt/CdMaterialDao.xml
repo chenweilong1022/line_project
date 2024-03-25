@@ -15,5 +15,32 @@
         <result property="createTime" column="create_time"/>
     </resultMap>
 
+    <select id="listPage" resultType="io.renren.modules.ltt.vo.CdMaterialVO">
+        SELECT
+            m.id,
+            m.remark,
+            m.material_url materialUrl,
+            m.navy_url navyUrl,
+            m.upload_number uploadNumber,
+            m.material_number materialNumber,
+            m.navy_number navyNumber,
+            m.synchronizations_number synchronizationsNumber,
+            m.successes_number successesNumber,
+            m.failures_number failuresNumber,
+            m.type,
+            m.delete_flag deleteFlag,
+            m.create_time createTime,
+            t.group_status groupStatus,
+            t.group_name groupName,
+            t.room_id roomId,
+            t.id groupTaskId
+        FROM
+            cd_material m
+                LEFT JOIN cd_group_tasks t ON m.id = t.material_id
+        <where>
+
+        </where>
+    </select>
+
 
 </mapper>

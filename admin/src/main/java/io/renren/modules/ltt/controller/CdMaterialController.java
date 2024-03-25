@@ -98,6 +98,16 @@ public class CdMaterialController {
     /**
      * 保存
      */
+    @RequestMapping("/reallocateToken")
+    @RequiresPermissions("ltt:cdmaterial:save")
+    public R reallocateToken(@RequestBody Integer[] ids){
+        cdMaterialService.reallocateToken(Arrays.asList(ids));
+        return R.ok();
+    }
+
+    /**
+     * 保存
+     */
     @RequestMapping("/exportSy")
     @RequiresPermissions("ltt:cdmaterial:save")
     public void exportSy(CdMaterialDTO cdMaterial, HttpServletResponse response) throws IOException {

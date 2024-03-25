@@ -18,6 +18,8 @@ public enum GroupStatus implements BaseEnum {
     GroupStatus8(8,"同步通讯录失败"),
     GroupStatus9(9,"群人数同步"),
     GroupStatus10(10,"群人数同步失败"),
+    GroupStatus11(11,"mid添加失败"),
+    GroupStatus12(12,"重新分配token去拉群"),
     ;
 
     GroupStatus(int key, String value) {

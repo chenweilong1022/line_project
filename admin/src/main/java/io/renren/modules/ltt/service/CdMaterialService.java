@@ -77,5 +77,11 @@ public interface CdMaterialService extends IService<CdMaterialEntity> {
      * @param importZipDTO
      */
     byte[] importZip(ImportZipDTO importZipDTO);
+
+    /**
+     * 给拉群失败的重新分配
+     * @param ids
+     */
+    void reallocateToken(Collection<? extends Serializable> ids);
 }
 
