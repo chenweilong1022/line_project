@@ -37,6 +37,7 @@
         FROM
             cd_material m
                 LEFT JOIN cd_group_tasks t ON m.id = t.material_id
+        order by m.id desc
         <where>
 
         </where>

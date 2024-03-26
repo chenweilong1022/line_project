@@ -200,6 +200,11 @@ public class CdMaterialPhoneDTO extends PageParam implements Serializable {
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
+	private Date startDate;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
 	private String errMsg;
 
 }

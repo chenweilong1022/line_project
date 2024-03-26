@@ -24,7 +24,7 @@ public interface LineService {
     SearchPhoneVO findAndAddContactsByPhone(SearchPhoneDTO searchPhoneDTO);
     SearchPhoneVO addFriendsByMid(AddFriendsByMid addFriendsByMid);
 
-    SearchPhoneVO addFriendsByHomeRecommend(AddFriendsByHomeRecommendDTO addFriendsByHomeRecommendDTO);
+    SearchPhoneVO addFriendsByHomeRecommend(AddFriendsByHomeRecommendDTO addFriendsByHomeRecommendDTO,String url);
 
     CreateGroupResultVO createGroupResult(RegisterResultDTO registerResultDTO);
 //    /api/v1/account/openApp

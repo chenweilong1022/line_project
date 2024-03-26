@@ -523,6 +523,11 @@ public class GroupTask {
             final CountDownLatch latch = new CountDownLatch(materialPhoneEntities.size());
 //            List<CdGroupTasksEntity> cdGroupTasksEntitiesUpdate = new ArrayList<>();
             for (CdMaterialPhoneEntity materialPhoneEntity : materialPhoneEntities) {
+                if (DateUtil.date().before(materialPhoneEntity.getStartDate())) {
+                    log.info("id = {},还没到执行时间");
+                    latch.countDown();
+                    continue;
+                }
                 Lock lock = lockMap.computeIfAbsent(materialPhoneEntity.getId(), k -> new ReentrantLock());
                 threadPoolTaskExecutor.submit(new Thread(()->{
                     if (lock.tryLock()) {
@@ -555,7 +560,7 @@ public class GroupTask {
                             addFriendsByMid.setProxy(proxyIp);
                             addFriendsByMid.setMid(materialPhoneEntity.getMid());
                             addFriendsByMid.setToken(cdLineRegisterEntity.getToken());
-                            SearchPhoneVO searchPhoneVO = lineService.addFriendsByHomeRecommend(addFriendsByMid);
+                            SearchPhoneVO searchPhoneVO = lineService.addFriendsByHomeRecommend(addFriendsByMid,null);
                             Thread.sleep(5000);
                             CdMaterialPhoneEntity update = new CdMaterialPhoneEntity();
                             update.setId(materialPhoneEntity.getId());
@@ -563,7 +568,7 @@ public class GroupTask {
                                 latch.countDown();
                                 return;
                             }
-                            update.setErrMsg(StrUtil.concat(true,update.getErrMsg(),searchPhoneVO.getMsg()));
+                            update.setErrMsg(StrUtil.concat(true,materialPhoneEntity.getErrMsg(),searchPhoneVO.getMsg()));
                             update.setVideoProfile(proxyIp);
                             if (200 == searchPhoneVO.getCode()) {
                                 update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus9.getKey());

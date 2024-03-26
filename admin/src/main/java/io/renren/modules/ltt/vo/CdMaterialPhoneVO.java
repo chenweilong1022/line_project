@@ -199,6 +199,11 @@ public class CdMaterialPhoneVO implements Serializable {
 	 *
 	 */
 	@ApiModelProperty(required=false,value="")
+	private Date startDate;
+	/**
+	 *
+	 */
+	@ApiModelProperty(required=false,value="")
 	private String errMsg;
 
 }
