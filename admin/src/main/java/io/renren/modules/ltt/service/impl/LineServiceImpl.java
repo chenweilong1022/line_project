@@ -235,7 +235,7 @@ public class LineServiceImpl implements LineService {
                 url = "addFriendsByHomeRecommend";
             }
             ProjectWorkEntity projectWorkEntity = caffeineCacheProjectWorkEntity.getIfPresent(ConfigConstant.PROJECT_WORK_KEY);
-            String getPhoneHttp = String.format("%s/api/v1/work/%s",url,projectWorkEntity.getLineBaseHttp());
+            String getPhoneHttp = String.format("%s/api/v1/work/%s",projectWorkEntity.getLineBaseHttp(),url);
             String jsonStr = JSONUtil.toJsonStr(addFriendsByHomeRecommendDTO);
             String resp = HttpUtil.post(getPhoneHttp, jsonStr);
             SearchPhoneVO searchPhoneVO = JSON.parseObject(resp, SearchPhoneVO.class);

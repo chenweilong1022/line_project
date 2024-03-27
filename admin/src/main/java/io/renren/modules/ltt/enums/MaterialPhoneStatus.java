@@ -18,6 +18,8 @@ public enum MaterialPhoneStatus implements BaseEnum {
     MaterialPhoneStatus8(8,"消息发送完成"),
     MaterialPhoneStatus9(9,"mid添加成功"),
     MaterialPhoneStatus10(10,"mid添加失败"),
+    MaterialPhoneStatus11(11,"搜索手机号成功"),
+    MaterialPhoneStatus12(12,"搜索手机号失败"),
     ;
 
     MaterialPhoneStatus(int key, String value) {

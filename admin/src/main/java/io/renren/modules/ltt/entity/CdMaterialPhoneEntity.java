@@ -1,5 +1,6 @@
 package io.renren.modules.ltt.entity;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -206,5 +207,16 @@ public class CdMaterialPhoneEntity implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private String errMsg;
+	/**
+	 * 添加朋友类型
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String addFriendType;
 
+	public void setContactKey(String contactKey) {
+		this.contactKey = contactKey;
+		if (StrUtil.isNotEmpty(this.contactKey)) {
+			this.contactKey = this.contactKey.replace("+","");
+		}
+	}
 }

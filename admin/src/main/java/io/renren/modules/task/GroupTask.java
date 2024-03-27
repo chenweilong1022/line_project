@@ -7,10 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.renren.modules.ltt.dto.*;
-import io.renren.modules.ltt.entity.CdGroupTasksEntity;
-import io.renren.modules.ltt.entity.CdLineRegisterEntity;
-import io.renren.modules.ltt.entity.CdMaterialPhoneEntity;
-import io.renren.modules.ltt.entity.CdPhoneFilterEntity;
+import io.renren.modules.ltt.entity.*;
 import io.renren.modules.ltt.enums.*;
 import io.renren.modules.ltt.service.*;
 import io.renren.modules.ltt.vo.*;
@@ -461,7 +458,7 @@ public class GroupTask {
 
 
     //开始 同步手机通讯录
-    @Scheduled(fixedDelay = 7000)
+    @Scheduled(fixedDelay = 1000)
     @Transactional(rollbackFor = Exception.class)
     @Async
     public void task6() {
@@ -523,11 +520,11 @@ public class GroupTask {
             final CountDownLatch latch = new CountDownLatch(materialPhoneEntities.size());
 //            List<CdGroupTasksEntity> cdGroupTasksEntitiesUpdate = new ArrayList<>();
             for (CdMaterialPhoneEntity materialPhoneEntity : materialPhoneEntities) {
-                if (DateUtil.date().before(materialPhoneEntity.getStartDate())) {
-                    log.info("id = {},还没到执行时间");
-                    latch.countDown();
-                    continue;
-                }
+//                if (DateUtil.date().before(materialPhoneEntity.getStartDate())) {
+//                    log.info("id = {},还没到执行时间");
+//                    latch.countDown();
+//                    continue;
+//                }
                 Lock lock = lockMap.computeIfAbsent(materialPhoneEntity.getId(), k -> new ReentrantLock());
                 threadPoolTaskExecutor.submit(new Thread(()->{
                     if (lock.tryLock()) {
@@ -556,41 +553,15 @@ public class GroupTask {
                                 latch.countDown();
                                 return;
                             }
-                            AddFriendsByHomeRecommendDTO addFriendsByMid = new AddFriendsByHomeRecommendDTO();
-                            addFriendsByMid.setProxy(proxyIp);
-                            addFriendsByMid.setMid(materialPhoneEntity.getMid());
-                            addFriendsByMid.setToken(cdLineRegisterEntity.getToken());
-                            SearchPhoneVO searchPhoneVO = lineService.addFriendsByHomeRecommend(addFriendsByMid,null);
-                            Thread.sleep(5000);
-                            CdMaterialPhoneEntity update = new CdMaterialPhoneEntity();
-                            update.setId(materialPhoneEntity.getId());
-                            if (ObjectUtil.isNull(searchPhoneVO)) {
-                                latch.countDown();
-                                return;
-                            }
-                            update.setErrMsg(StrUtil.concat(true,materialPhoneEntity.getErrMsg(),searchPhoneVO.getMsg()));
-                            update.setVideoProfile(proxyIp);
-                            if (200 == searchPhoneVO.getCode()) {
-                                update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus9.getKey());
-                            }else if (300 == searchPhoneVO.getCode()){
-                                update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus1.getKey());
+                            //如果是搜索模式
+                            if (AddFriendType.AddFriendType8.getValue().equals(materialPhoneEntity.getAddFriendType())) {
+                                if (addFriendByPhone(materialPhoneEntity, proxyIp, cdLineRegisterEntity, latch)) return;
                             }else {
-                                update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus10.getKey());
-                                CdGroupTasksEntity cdGroupTasksEntityUpdate = new CdGroupTasksEntity();
-                                cdGroupTasksEntityUpdate.setId(materialPhoneEntity.getGroupTaskId());
-                                cdGroupTasksEntityUpdate.setGroupStatus(GroupStatus.GroupStatus11.getKey());
-//                        cdGroupTasksEntitiesUpdate.add(cdGroupTasksEntityUpdate);
-                                cdGroupTasksService.updateById(cdGroupTasksEntityUpdate);
-//                        updates.add(update);
-                                cdMaterialPhoneService.updateById(update);
-                                cdLineRegisterService.unLock(cdLineRegisterEntity.getId());
-                                latch.countDown();
-                                return;
+                                //mid模式直接添加
+                                if (addFriendById(materialPhoneEntity, proxyIp, cdLineRegisterEntity, latch)) return;
                             }
-//                    updates.add(update);
-                            cdMaterialPhoneService.updateById(update);
-                            latch.countDown();
-                        } catch (InterruptedException e) {
+                            Thread.sleep(7000);
+                        } catch (Exception e) {
 
                         } finally {
                             // 确保释放锁
@@ -619,6 +590,113 @@ public class GroupTask {
             task6Lock.unlock();
         }
     }
+
+    private boolean addFriendByPhone(CdMaterialPhoneEntity materialPhoneEntity, String proxyIp, CdLineRegisterEntity cdLineRegisterEntity, CountDownLatch latch) {
+        SearchPhoneDTO searchPhoneDTO = new SearchPhoneDTO();
+        searchPhoneDTO.setProxy(proxyIp);
+        searchPhoneDTO.setPhone(materialPhoneEntity.getContactKey());
+        searchPhoneDTO.setToken(cdLineRegisterEntity.getToken());
+        SearchPhoneVO andAddContactsByPhone = lineService.searchPhone(searchPhoneDTO);
+
+        CdMaterialPhoneEntity update = new CdMaterialPhoneEntity();
+        update.setId(materialPhoneEntity.getId());
+        update.setVideoProfile(searchPhoneDTO.getProxy());
+        if (ObjectUtil.isNotNull(andAddContactsByPhone)) {
+            if (200 != andAddContactsByPhone.getCode()) {
+                update.setErrMsg(StrUtil.concat(true, materialPhoneEntity.getErrMsg(),andAddContactsByPhone.getMsg()));
+                update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus12.getKey());
+                CdGroupTasksEntity cdGroupTasksEntityUpdate = new CdGroupTasksEntity();
+                cdGroupTasksEntityUpdate.setId(materialPhoneEntity.getGroupTaskId());
+                cdGroupTasksEntityUpdate.setGroupStatus(GroupStatus.GroupStatus11.getKey());
+                //cdGroupTasksEntitiesUpdate.add(cdGroupTasksEntityUpdate);
+                cdGroupTasksService.updateById(cdGroupTasksEntityUpdate);
+                //updates.add(update);
+                cdMaterialPhoneService.updateById(update);
+                cdLineRegisterService.unLock(cdLineRegisterEntity.getId());
+                latch.countDown();
+                return true;
+            }else if (300 == andAddContactsByPhone.getCode()){
+                update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus1.getKey());
+            }else {
+                Map<String, The818051863582> data = andAddContactsByPhone.getData();
+                if (CollUtil.isNotEmpty(data)) {
+                    The818051863582 the8180518635821 = data.values().stream().findFirst().get();
+                    if (ObjectUtil.isNotNull(the8180518635821)) {
+                        update.setMid(the8180518635821.getMid());
+                        AddFriendsByMid addFriendsByMid = getAddFriendsByMid(update, searchPhoneDTO);
+                        SearchPhoneVO searchPhoneVO = lineService.addFriendsByMid(addFriendsByMid);
+                        if (ObjectUtil.isNotNull(searchPhoneVO) && 200 == searchPhoneVO.getCode()) {
+                            update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus9.getKey());
+                            update.setErrMsg(StrUtil.concat(true, materialPhoneEntity.getErrMsg(),searchPhoneVO.getMsg()));
+                        }else{
+                            update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus10.getKey());
+                            CdGroupTasksEntity cdGroupTasksEntityUpdate = new CdGroupTasksEntity();
+                            cdGroupTasksEntityUpdate.setId(materialPhoneEntity.getGroupTaskId());
+                            cdGroupTasksEntityUpdate.setGroupStatus(GroupStatus.GroupStatus11.getKey());
+                            //cdGroupTasksEntitiesUpdate.add(cdGroupTasksEntityUpdate);
+                            cdGroupTasksService.updateById(cdGroupTasksEntityUpdate);
+                            //updates.add(update);
+                            cdMaterialPhoneService.updateById(update);
+                            cdLineRegisterService.unLock(cdLineRegisterEntity.getId());
+                            latch.countDown();
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        cdMaterialPhoneService.updateById(update);
+        latch.countDown();
+        return false;
+    }
+
+    private boolean addFriendById(CdMaterialPhoneEntity materialPhoneEntity, String proxyIp, CdLineRegisterEntity cdLineRegisterEntity, CountDownLatch latch) {
+        AddFriendsByHomeRecommendDTO addFriendsByMid = new AddFriendsByHomeRecommendDTO();
+        addFriendsByMid.setProxy(proxyIp);
+        addFriendsByMid.setMid(materialPhoneEntity.getMid());
+        addFriendsByMid.setToken(cdLineRegisterEntity.getToken());
+        SearchPhoneVO searchPhoneVO = lineService.addFriendsByHomeRecommend(addFriendsByMid, materialPhoneEntity.getAddFriendType());
+        CdMaterialPhoneEntity update = new CdMaterialPhoneEntity();
+        update.setId(materialPhoneEntity.getId());
+        if (ObjectUtil.isNull(searchPhoneVO)) {
+            latch.countDown();
+            return true;
+        }
+        update.setErrMsg(StrUtil.concat(true, materialPhoneEntity.getErrMsg(),searchPhoneVO.getMsg()));
+        update.setVideoProfile(proxyIp);
+        if (200 == searchPhoneVO.getCode()) {
+            update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus9.getKey());
+        }else if (300 == searchPhoneVO.getCode()){
+            update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus1.getKey());
+        }else {
+            update.setMaterialPhoneStatus(MaterialPhoneStatus.MaterialPhoneStatus10.getKey());
+            CdGroupTasksEntity cdGroupTasksEntityUpdate = new CdGroupTasksEntity();
+            cdGroupTasksEntityUpdate.setId(materialPhoneEntity.getGroupTaskId());
+            cdGroupTasksEntityUpdate.setGroupStatus(GroupStatus.GroupStatus11.getKey());
+//                        cdGroupTasksEntitiesUpdate.add(cdGroupTasksEntityUpdate);
+            cdGroupTasksService.updateById(cdGroupTasksEntityUpdate);
+//                        updates.add(update);
+            cdMaterialPhoneService.updateById(update);
+            cdLineRegisterService.unLock(cdLineRegisterEntity.getId());
+            latch.countDown();
+            return true;
+        }
+//                    updates.add(update);
+        cdMaterialPhoneService.updateById(update);
+        latch.countDown();
+        return false;
+    }
+
+    private static AddFriendsByMid getAddFriendsByMid(CdMaterialPhoneEntity cdGroupSubtasksEntity, SearchPhoneDTO searchPhoneDTO) {
+        AddFriendsByMid addFriendsByMid = new AddFriendsByMid();
+        addFriendsByMid.setProxy(searchPhoneDTO.getProxy());
+        addFriendsByMid.setPhone(searchPhoneDTO.getPhone());
+        addFriendsByMid.setMid(cdGroupSubtasksEntity.getMid());
+        addFriendsByMid.setFriendAddType("phoneSearch");
+        addFriendsByMid.setToken(searchPhoneDTO.getToken());
+        return addFriendsByMid;
+    }
+
 
     static ReentrantLock task1Lock = new ReentrantLock();
 

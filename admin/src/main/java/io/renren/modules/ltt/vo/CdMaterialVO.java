@@ -114,6 +114,11 @@ public class CdMaterialVO implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private String roomId;
+	/**
+	 * 添加朋友类型
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String addFriendType;
 
 	public String getTypeStr() {
 		return EnumUtil.queryValueByKey(this.type, MaterialPhoneType.values());

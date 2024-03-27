@@ -206,5 +206,9 @@ public class CdMaterialPhoneDTO extends PageParam implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private String errMsg;
-
+	/**
+	 * 添加朋友类型
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String addFriendType;
 }

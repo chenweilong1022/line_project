@@ -13,7 +13,7 @@ public enum AddFriendType implements BaseEnum {
     AddFriendType2(2,"addFriendsByChatHeader"),
     AddFriendType3(3,"addFriendsByHomeTabCPF"),
     AddFriendType4(4,"addFriendsByHomeTabCPFV2"),
-    AddFriendType5(5,"addFriendsByMid"),
+//    AddFriendType5(5,"addFriendsByMid"),
     AddFriendType6(6,"addFriendsByNotification"),
 //    AddFriendType7(7,"addFriendsByReference"),
     AddFriendType8(8,"addFriendsByMid"),
@@ -24,6 +24,8 @@ public enum AddFriendType implements BaseEnum {
     AddFriendType13(13,"addFriendsByUnifiedSearch"),
     AddFriendType14(14,"addFriendsByUnifiedSearchOATab"),
     AddFriendType15(15,"addFriendsByWalletTabCPF"),
+    AddFriendType16(16,"addFriendsByHomeRecommend"),
+    AddFriendType17(17,"addFriendsByFriendRecommend"),
     ;
 
     AddFriendType(int key, String value) {

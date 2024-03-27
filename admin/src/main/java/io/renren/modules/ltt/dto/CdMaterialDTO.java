@@ -102,5 +102,10 @@ public class CdMaterialDTO extends PageParam implements Serializable {
 	 */
 	@ApiModelProperty(required=false,value="")
 	private Date createTime;
+	/**
+	 * 添加朋友类型
+	 */
+	@ApiModelProperty(required=false,value="")
+	private String addFriendType;
 
 }

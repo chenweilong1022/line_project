@@ -675,86 +675,86 @@
 ////    }
 ////
 ////
-////    //给当前群分配任务 line号
-////    @Scheduled(fixedDelay = 5000)
-////    @Transactional(rollbackFor = Exception.class)
-////    @Async
-////    public void task3() {
-////        List<CdGroupSubtasksEntity> list = cdGroupSubtasksService.list(new QueryWrapper<CdGroupSubtasksEntity>().lambda()
-////                .lt(CdGroupSubtasksEntity::getExecutionTime, DateUtil.date())
-////                .eq(CdGroupSubtasksEntity::getSubtaskStatus, GroupSubTasksStatus.GroupStatus2.getKey())
-////                .eq(CdGroupSubtasksEntity::getSearchStatus, SearchStatus.SearchStatus1.getKey())
-////        );
-////
-////        if (CollUtil.isEmpty(list)) {
-////            log.info("GroupTask task3 list isEmpty");
-////            return;
-////        }
-////
-////        List<CdGroupSubtasksEntity> cdGroupSubtasksEntities = new ArrayList<>();
-////
-////        for (CdGroupSubtasksEntity cdGroupSubtasksEntity : list) {
-////            //查询是否已经分配了拉群账号
-////            CdLineRegisterEntity cdLineRegisterEntity = cdLineRegisterService.getOne(new QueryWrapper<CdLineRegisterEntity>().lambda()
-////                    .eq(CdLineRegisterEntity::getGroupTaskId,cdGroupSubtasksEntity.getGroupTasksId())
-////            );
-////            if (ObjectUtil.isNull(cdLineRegisterEntity)) {
-////                continue;
-////            }
-////            cdGroupSubtasksEntity.setAddStatus(AddStatus.AddStatus2.getKey());
-////            cdGroupSubtasksEntity.setSearchStatus(SearchStatus.SearchStatus2.getKey());
-////            cdGroupSubtasksEntities.add(cdGroupSubtasksEntity);
-////            poolExecutor.submit(() -> {
-////                String getflowip = proxyService.getflowip(cdLineRegisterEntity);
-////                if (StrUtil.isEmpty(getflowip)) {
-////                    return;
-////                }
-////                SearchPhoneDTO searchPhoneDTO = new SearchPhoneDTO();
-////                searchPhoneDTO.setProxy(getflowip);
-////                searchPhoneDTO.setPhone(cdGroupSubtasksEntity.getPhone());
-////                searchPhoneDTO.setToken(cdLineRegisterEntity.getToken());
-////                SearchPhoneVO andAddContactsByPhone = lineService.searchPhone(searchPhoneDTO);
-////                String errMsg = "";
-////                if (ObjectUtil.isNotNull(andAddContactsByPhone)) {
-////                    if (200 != andAddContactsByPhone.getCode()) {
-////                        errMsg = errMsg + andAddContactsByPhone.getMsg();
-////                        cdGroupSubtasksEntity.setSubtaskStatus(GroupSubTasksStatus.GroupStatus5.getKey());
-////                    }else {
-////                        cdGroupSubtasksEntity.setProxy(searchPhoneDTO.getProxy());
-////                        Map<String, The818051863582> data = andAddContactsByPhone.getData();
-////                        if (CollUtil.isNotEmpty(data)) {
-////                            The818051863582 the8180518635821 = data.values().stream().findFirst().get();
-////                            if (ObjectUtil.isNotNull(the8180518635821)) {
-////                                cdGroupSubtasksEntity.setSubtaskStatus(GroupSubTasksStatus.GroupStatus4.getKey());
-////                                cdGroupSubtasksEntity.setMid(the8180518635821.getMid());
-////
-////                                AddFriendsByMid addFriendsByMid = getAddFriendsByMid(cdGroupSubtasksEntity, searchPhoneDTO);
-////                                SearchPhoneVO searchPhoneVO = lineService.addFriendsByMid(addFriendsByMid);
-////                                if (ObjectUtil.isNotNull(addFriendsByMid) && 200 != searchPhoneVO.getCode()) {
-////                                    errMsg = errMsg + searchPhoneVO.getMsg();
-////                                }
-////                            }
-////                        }
-////                    }
-////                    if (StrUtil.isNotEmpty(errMsg)) {
-////                        cdGroupSubtasksEntity.setErrMsg(errMsg);
-////                    }
-////                }
-////
-////
-////                synchronized (lockObj3) {
-////                    cdGroupSubtasksService.updateById(cdGroupSubtasksEntity);
-////                }
-////            });
-////        }
-////        if (CollUtil.isEmpty(cdGroupSubtasksEntities)) {
-////            return;
-////        }
-////        synchronized (lockObj3) {
-////            cdGroupSubtasksService.updateBatchById(cdGroupSubtasksEntities);
-////        }
-////    }
-////
+//    //给当前群分配任务 line号
+//    @Scheduled(fixedDelay = 5000)
+//    @Transactional(rollbackFor = Exception.class)
+//    @Async
+//    public void task3() {
+//        List<CdGroupSubtasksEntity> list = cdGroupSubtasksService.list(new QueryWrapper<CdGroupSubtasksEntity>().lambda()
+//                .lt(CdGroupSubtasksEntity::getExecutionTime, DateUtil.date())
+//                .eq(CdGroupSubtasksEntity::getSubtaskStatus, GroupSubTasksStatus.GroupStatus2.getKey())
+//                .eq(CdGroupSubtasksEntity::getSearchStatus, SearchStatus.SearchStatus1.getKey())
+//        );
+//
+//        if (CollUtil.isEmpty(list)) {
+//            log.info("GroupTask task3 list isEmpty");
+//            return;
+//        }
+//
+//        List<CdGroupSubtasksEntity> cdGroupSubtasksEntities = new ArrayList<>();
+//
+//        for (CdGroupSubtasksEntity cdGroupSubtasksEntity : list) {
+//            //查询是否已经分配了拉群账号
+//            CdLineRegisterEntity cdLineRegisterEntity = cdLineRegisterService.getOne(new QueryWrapper<CdLineRegisterEntity>().lambda()
+//                    .eq(CdLineRegisterEntity::getGroupTaskId,cdGroupSubtasksEntity.getGroupTasksId())
+//            );
+//            if (ObjectUtil.isNull(cdLineRegisterEntity)) {
+//                continue;
+//            }
+//            cdGroupSubtasksEntity.setAddStatus(AddStatus.AddStatus2.getKey());
+//            cdGroupSubtasksEntity.setSearchStatus(SearchStatus.SearchStatus2.getKey());
+//            cdGroupSubtasksEntities.add(cdGroupSubtasksEntity);
+//            poolExecutor.submit(() -> {
+//                String getflowip = proxyService.getflowip(cdLineRegisterEntity);
+//                if (StrUtil.isEmpty(getflowip)) {
+//                    return;
+//                }
+//                SearchPhoneDTO searchPhoneDTO = new SearchPhoneDTO();
+//                searchPhoneDTO.setProxy(getflowip);
+//                searchPhoneDTO.setPhone(cdGroupSubtasksEntity.getPhone());
+//                searchPhoneDTO.setToken(cdLineRegisterEntity.getToken());
+//                SearchPhoneVO andAddContactsByPhone = lineService.searchPhone(searchPhoneDTO);
+//                String errMsg = "";
+//                if (ObjectUtil.isNotNull(andAddContactsByPhone)) {
+//                    if (200 != andAddContactsByPhone.getCode()) {
+//                        errMsg = errMsg + andAddContactsByPhone.getMsg();
+//                        cdGroupSubtasksEntity.setSubtaskStatus(GroupSubTasksStatus.GroupStatus5.getKey());
+//                    }else {
+//                        cdGroupSubtasksEntity.setProxy(searchPhoneDTO.getProxy());
+//                        Map<String, The818051863582> data = andAddContactsByPhone.getData();
+//                        if (CollUtil.isNotEmpty(data)) {
+//                            The818051863582 the8180518635821 = data.values().stream().findFirst().get();
+//                            if (ObjectUtil.isNotNull(the8180518635821)) {
+//                                cdGroupSubtasksEntity.setSubtaskStatus(GroupSubTasksStatus.GroupStatus4.getKey());
+//                                cdGroupSubtasksEntity.setMid(the8180518635821.getMid());
+//
+//                                AddFriendsByMid addFriendsByMid = getAddFriendsByMid(cdGroupSubtasksEntity, searchPhoneDTO);
+//                                SearchPhoneVO searchPhoneVO = lineService.addFriendsByMid(addFriendsByMid);
+//                                if (ObjectUtil.isNotNull(addFriendsByMid) && 200 != searchPhoneVO.getCode()) {
+//                                    errMsg = errMsg + searchPhoneVO.getMsg();
+//                                }
+//                            }
+//                        }
+//                    }
+//                    if (StrUtil.isNotEmpty(errMsg)) {
+//                        cdGroupSubtasksEntity.setErrMsg(errMsg);
+//                    }
+//                }
+//
+//
+//                synchronized (lockObj3) {
+//                    cdGroupSubtasksService.updateById(cdGroupSubtasksEntity);
+//                }
+//            });
+//        }
+//        if (CollUtil.isEmpty(cdGroupSubtasksEntities)) {
+//            return;
+//        }
+//        synchronized (lockObj3) {
+//            cdGroupSubtasksService.updateBatchById(cdGroupSubtasksEntities);
+//        }
+//    }
+//
 ////    private static AddFriendsByMid getAddFriendsByMid(CdGroupSubtasksEntity cdGroupSubtasksEntity, SearchPhoneDTO searchPhoneDTO) {
 ////        AddFriendsByMid addFriendsByMid = new AddFriendsByMid();
 ////        addFriendsByMid.setProxy(searchPhoneDTO.getProxy());

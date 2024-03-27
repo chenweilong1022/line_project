@@ -161,7 +161,6 @@ public class RegisterTask {
         if (!tflag) {
             return;
         }
-
         try {
             //获取子任务
             List<CdRegisterSubtasksEntity> cdRegisterSubtasksEntities = cdRegisterSubtasksService.groupByTaskId();
