@@ -1,10 +1,11 @@
 ### 获取所有联系人
-POST {{ip}}/api/v1/work/getAllContactIds
+POST http://137.184.112.207:22117/api/v1/work/getChats
 Content-Type: application/json
 
 {
-  "proxy": "{{proxyUrl}}",
-  "token": "{\"language\":\"English\",\"acceptLanguage\":\"en-th\",\"acceptLanguageLal\":\"en_TH\",\"localCountry\":\"\",\"countryCode\":\"TH\",\"storeUserId\":\"\",\"IDFA\":\"\",\"lineTsVersion\":\"4.7.2\",\"sessionId\":\"\",\"neloInstallID\":\"1BE14FFA-C792-435C-B4F4-3C19DADC5FC6\",\"host\":\"192.168.96.64\",\"networkType\":\"Cellular\",\"osVersion\":\"17.2.1\",\"osProductVersion\":\"\",\"osMachine\":\"iPhone11,2\",\"appVersion\":\"13.21.0\",\"carrier\":\"Total Access Communication\",\"MCC\":\"520\",\"MNC\":\"18\",\"sid\":\"\",\"cid\":\"\",\"scid\":\"\",\"tdid\":\"\",\"tcid\":\"\",\"ab\":\"\",\"lineTlUpstreamId\":\"\",\"txtToken\":\"81f9933e3a434a1aaf7af09893937fd0\",\"projectVersion\":\"2.3.9\",\"projectName\":\"a94b5e903ad040ee93c110e31703c781\",\"channelTokenPost\":\"\",\"channelTokenNotification\":\"\",\"bindEmail\":\"\",\"deviceDensity\":0,\"deviceHeight\":0,\"deviceWidth\":0,\"deviceCoreCount\":0,\"deviceTotalDiskSpaceGB\":0,\"deviceRemainingDiskSpaceGB\":0,\"deviceTimeZoneName\":\"\",\"deviceZoneAbbrev\":\"\",\"password\":\"\",\"nickName\":\"\",\"authToken\":\"uf375c88e30f816e5a0f3d7ce733bbadd:ZDls1m1hk5G6y9ysdjfd\",\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0ZTdlOWQxYy1lNTE2LTQyZmQtOTNjNy0xZjU4MjM0NTVhMGUiLCJhdWQiOiJMSU5FIiwiaWF0IjoxNzA1ODEwOTIwLCJleHAiOjE3MDY0MTU3MjAsInNjcCI6IkxJTkVfQ09SRSIsInJ0aWQiOiJjMzNmODkwNC05Yzg5LTQ3Y2EtYjBhNS1iNWMwNWMzNmM3MWUiLCJyZXhwIjoxODYzNDkwOTIwLCJ2ZXIiOiIzLjEiLCJhaWQiOiJ1ZjM3NWM4OGUzMGY4MTZlNWEwZjNkN2NlNzMzYmJhZGQiLCJsc2lkIjoiY2NhNWM4OTAtMzdmYi00YzgyLTg5MjQtYjE0YjI2YzM4OGZmIiwiZGlkIjoiMDc0NTc1MDVkZGM3NDY2Njg1NDQwNzdiMGRkNDIzMTUiLCJjdHlwZSI6IklPUyIsImNtb2RlIjoiUFJJTUFSWSIsImNpZCI6IjAwMDAwMDAwMDAifQ.nHV7FAzCVgjw1V8Ic4NaSHHubz8LveAhSKZwgI4gWFM\",\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMzNmODkwNC05Yzg5LTQ3Y2EtYjBhNS1iNWMwNWMzNmM3MWUiLCJhdGkiOiI0ZTdlOWQxYy1lNTE2LTQyZmQtOTNjNy0xZjU4MjM0NTVhMGUiLCJhdWQiOiJMSU5FIiwicm90IjoiUk9UQVRFIiwiaWF0IjoxNzA1ODEwOTIwLCJleHAiOjE4NjM0OTA5MjAsInNjcCI6IkxJTkVfQ09SRSIsInZlciI6IjMuMSIsImFpZCI6InVmMzc1Yzg4ZTMwZjgxNmU1YTBmM2Q3Y2U3MzNiYmFkZCIsImxzaWQiOiJjY2E1Yzg5MC0zN2ZiLTRjODItODkyNC1iMTRiMjZjMzg4ZmYiLCJkaWQiOiIwNzQ1NzUwNWRkYzc0NjY2ODU0NDA3N2IwZGQ0MjMxNSIsImFwcElkIjoiMDAwMDAwMDAwMCJ9.Yn2Iix_z9G097gT89GGSJvFdKMwj5VbABTTb85sD1zU\",\"mid\":\"uf375c88e30f816e5a0f3d7ce733bbadd\",\"authSessionId\":\"\",\"phone\":\"+66 90 902 5768\",\"lineHost\":\"gws.line.naver.jp\",\"reqSeq\":0,\"eventSeq\":0,\"encryptedAccessToken\":\"\",\"clientPrivateKey\":\"\",\"clientPublicKey\":\"\",\"clientNonce\":\"\",\"serverPublicKey\":\"\",\"serverNonce\":\"\",\"clientE2EEPrivateKey\":\"EN7qCaug74O2htDw8PIvAPOeNdMXRT7EC46JUXUp6U8=\",\"clientE2EEPublicKey\":\"AXdfj3GzngE8BhWHiikh810xUbn8mQH7wquGNlWMvBw=\",\"clientE2EENonce\":\"\",\"clientE2EEPrivateKeyId\":4632742,\"serverE2EEPublicKey\":\"\",\"tokenV3IssueResult\":{\"refreshAfter\":727849123,\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjMzNmODkwNC05Yzg5LTQ3Y2EtYjBhNS1iNWMwNWMzNmM3MWUiLCJhdGkiOiI0ZTdlOWQxYy1lNTE2LTQyZmQtOTNjNy0xZjU4MjM0NTVhMGUiLCJhdWQiOiJMSU5FIiwicm90IjoiUk9UQVRFIiwiaWF0IjoxNzA1ODEwOTIwLCJleHAiOjE4NjM0OTA5MjAsInNjcCI6IkxJTkVfQ09SRSIsInZlciI6IjMuMSIsImFpZCI6InVmMzc1Yzg4ZTMwZjgxNmU1YTBmM2Q3Y2U3MzNiYmFkZCIsImxzaWQiOiJjY2E1Yzg5MC0zN2ZiLTRjODItODkyNC1iMTRiMjZjMzg4ZmYiLCJkaWQiOiIwNzQ1NzUwNWRkYzc0NjY2ODU0NDA3N2IwZGQ0MjMxNSIsImFwcElkIjoiMDAwMDAwMDAwMCJ9.Yn2Iix_z9G097gT89GGSJvFdKMwj5VbABTTb85sD1zU\",\"mid\":\"uf375c88e30f816e5a0f3d7ce733bbadd\",\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0ZTdlOWQxYy1lNTE2LTQyZmQtOTNjNy0xZjU4MjM0NTVhMGUiLCJhdWQiOiJMSU5FIiwiaWF0IjoxNzA1ODEwOTIwLCJleHAiOjE3MDY0MTU3MjAsInNjcCI6IkxJTkVfQ09SRSIsInJ0aWQiOiJjMzNmODkwNC05Yzg5LTQ3Y2EtYjBhNS1iNWMwNWMzNmM3MWUiLCJyZXhwIjoxODYzNDkwOTIwLCJ2ZXIiOiIzLjEiLCJhaWQiOiJ1ZjM3NWM4OGUzMGY4MTZlNWEwZjNkN2NlNzMzYmJhZGQiLCJsc2lkIjoiY2NhNWM4OTAtMzdmYi00YzgyLTg5MjQtYjE0YjI2YzM4OGZmIiwiZGlkIjoiMDc0NTc1MDVkZGM3NDY2Njg1NDQwNzdiMGRkNDIzMTUiLCJjdHlwZSI6IklPUyIsImNtb2RlIjoiUFJJTUFSWSIsImNpZCI6IjAwMDAwMDAwMDAifQ.nHV7FAzCVgjw1V8Ic4NaSHHubz8LveAhSKZwgI4gWFM\",\"loginSessionID\":\"cca5c890-37fb-4c82-8924-b14b26c388ff\",\"refreshApiRetryPolicy\":{\"maxDelayInMillis\":104857600,\"multiplier\":2,\"initialDelayInMillis\":200,\"jitterRate\":0.3}}}"
+  "chatRoomId": "cfeb9e1384f10ec93fd44ee0f27d76788",
+  "proxy": "socks5://43.159.18.174:20552",
+  "token": "{\"language\":\"日本語\",\"acceptLanguage\":\"ja-jp\",\"acceptLanguageLal\":\"ja_JP\",\"localCountry\":\"日本\",\"countryCode\":\"JP\",\"storeUserId\":\"5432C2911B347FE2\",\"IDFA\":\"8BFEAEAF-9EB8-4FEB-8FAA-FCFDFFFED9CC\",\"lineTsVersion\":\"4.7.2\",\"sessionId\":\"EDCFFEEE-BDAA-4FDE-89F8-9C8F9BCA8EAE\",\"neloInstallID\":\"FADDCACA-9ACB-49D8-98FC-9D9EBADE9BCD\",\"host\":\"192.168.65.205\",\"networkType\":\"Cellular\",\"osVersion\":\"15.3\",\"osProductVersion\":\"19D50\",\"osMachine\":\"iPhone14,2\",\"appVersion\":\"14.3.1\",\"carrier\":\"NTT docomo\",\"MCC\":\"440\",\"MNC\":\"10\",\"sid\":\"98ABFF9E-CEBD-4FDC-BEAF-8A8A9BED8F9F\",\"cid\":\"AFBCFF9EBE984AC999EBDDCEFBEDBA99\",\"scid\":\"AB8AA9FD-CCCF-4E9D-8FFF-AE9A88BEFAE8\",\"tdid\":\"i8A89D89A-BAED-4ABF-989F-EEBF9EC8EECF\",\"tcid\":\"8FDBADAF-F98E-4F98-B8AC-D8A8DE9A8CDA\",\"ab\":\"2024.307.2034\",\"neloProcessID\":\"99BA9BFE-FD98-4E8E-AEFB-EED9AFACACCE\",\"lineTlUpstreamId\":\"1583881852\",\"txtToken\":\"81f9933e3a434a1aaf7af09893937fd0\",\"projectVersion\":\"2.3.9\",\"projectName\":\"a94b5e903ad040ee93c110e31703c781\",\"channelTokenPost\":\"\",\"channelTokenNotification\":\"\",\"bindEmail\":\"\",\"deviceDensity\":3,\"deviceHeight\":812,\"deviceWidth\":375,\"deviceCoreCount\":6,\"deviceTotalDiskSpaceGB\":60,\"deviceRemainingDiskSpaceGB\":6,\"deviceTimeZoneName\":\"Asia/Shanghai\",\"deviceZoneAbbrev\":\"GMT+8\",\"password\":\"yhsaf999...\",\"nickName\":\"vphag066\",\"authToken\":\"u5af3172915678217349937e124c72861:omlTsBGHucava16I7w5r\",\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1NTYyNzM3OC1lZjE2LTRjNjYtOWM5OS1lZTIxZGRlMjg2ZGEiLCJhdWQiOiJMSU5FIiwiaWF0IjoxNzEyMjgzOTQxLCJleHAiOjE3MTI4ODg3NDEsInNjcCI6IkxJTkVfQ09SRSIsInJ0aWQiOiJhMDViNzk0My0xZjA4LTRkZDAtODM0OS1hNzE5MTVlZjg3NDMiLCJyZXhwIjoxODY5OTYzOTQxLCJ2ZXIiOiIzLjEiLCJhaWQiOiJ1NWFmMzE3MjkxNTY3ODIxNzM0OTkzN2UxMjRjNzI4NjEiLCJsc2lkIjoiMGEyODc1OGYtMzUxNi00ZGIxLWJmN2YtZjI5NDZlMTYxZDlkIiwiZGlkIjoiYWE4OGQ5Y2Q4Y2JmNGNkZTllZThjZGFhY2U5YWZjYmIiLCJjdHlwZSI6IklPUyIsImNtb2RlIjoiUFJJTUFSWSIsImNpZCI6IjAwMDAwMDAwMDAifQ.OL5TwHqN1zHx2mDDmIfQ3jRZtRAPLkBZEtcksCURit8\",\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJhMDViNzk0My0xZjA4LTRkZDAtODM0OS1hNzE5MTVlZjg3NDMiLCJhdGkiOiI1NTYyNzM3OC1lZjE2LTRjNjYtOWM5OS1lZTIxZGRlMjg2ZGEiLCJhdWQiOiJMSU5FIiwicm90IjoiUk9UQVRFIiwiaWF0IjoxNzEyMjgzOTQxLCJleHAiOjE4Njk5NjM5NDEsInNjcCI6IkxJTkVfQ09SRSIsInZlciI6IjMuMSIsImFpZCI6InU1YWYzMTcyOTE1Njc4MjE3MzQ5OTM3ZTEyNGM3Mjg2MSIsImxzaWQiOiIwYTI4NzU4Zi0zNTE2LTRkYjEtYmY3Zi1mMjk0NmUxNjFkOWQiLCJkaWQiOiJhYTg4ZDljZDhjYmY0Y2RlOWVlOGNkYWFjZTlhZmNiYiIsImFwcElkIjoiMDAwMDAwMDAwMCJ9.bF6edp53CpUrjWIT-5eNHHhFiwj-XmGidfjJxBMauTo\",\"mid\":\"u5af3172915678217349937e124c72861\",\"authSessionId\":\"xUnPMuNHHrgJkXCTpPXkL4P7wK95KvLp\",\"phone\":\"8109048128287\",\"lineHost\":\"gw.line.naver.jp\",\"s5Obj\":{\"is_use\":true,\"ip\":\"43.159.18.174\",\"port\":20726,\"account\":\"\",\"pwd\":\"\",\"proxy_type\":\"socks5\"},\"reqSeq\":1006,\"eventSeq\":20,\"encryptedAccessToken\":\"\",\"clientPrivateKey\":\"IFHY5SDxxDibdivCoyKcvb5bpvVJkjRbjlc7JjKuv2o=\",\"clientPublicKey\":\"5R6tslX+Pynlmo+AAiIM6lmMdzauM4b7H0lYyvieSRI=\",\"clientNonce\":\"QR6LXksXnlpezh6jvj2lpw==\",\"serverPublicKey\":\"6RJzCggkp0QsRMUNIm6LhdrPF+cuVr8EEjcGWLXnqRo=\",\"serverNonce\":\"DcJL8ZoO3W+h4lVYnfCSIg==\",\"clientE2EEPrivateKey\":\"\",\"clientE2EEPublicKey\":\"\",\"clientE2EENonce\":\"\",\"clientE2EEPrivateKeyId\":0,\"serverE2EEPublicKey\":\"\",\"updateProfileImageStatus\":0,\"accountExistStatus\":false}"
 }
 
 
@@ -14,88 +15,50 @@ Content-Type: application/json
 
 {
   "userMidList": [
-    "uf3dec3e101ddd0dc80ac9226413a8e01",
-    "u775b50d202338d62c9d19cb51b28b53f",
-    "ub6877ca8bbd17143665eb48c78c6e9db",
-    "u97f39ed3592015970a4446c5a71c61d6",
-    "u149c3a447d9289c39f13fa1ecded1493",
-    "ube3df8871cbfd6af9a9b4a84ed9904b5",
-    "ufa2840c631232c4f5eaa15d44a957fed",
-    "u5520e623fc970d67f71ac79b9a8f6124",
-    "u53974b9f2d9c48ffc75aeca1b0ccc6a8",
-    "u694370858504181159c99ebf9efcf104",
-    "u9a1218f6167030274298aea960d82f7b",
-    "u04fba9073da2a7015093c112f3c58afe",
-    "ubb48c10c6ebf6206e94002c8d85e45ae",
-    "u0330d2ac1f059808f6d4948f9b035201",
-    "u0328616bc8f7a532af877a5b39fd50d6",
-    "u9e1b71e5a71f602278798509858d9865",
-    "udebb4e0f33d5cdddca2f5fe5533d2e8b",
-    "u4c8ca1d827461d5c629e5c7011019ed6",
-    "ude85c2c283ef9b7782555977e7f2ecdf",
-    "u59dbd33207a6a6c8b6e5b4e7ddaa19bc",
-    "uce1fe256fcdbea4e05fa6db076be7776",
-    "uec5bb3af25dfddcbbe0d37e7f74a724e",
-    "u6a02edb3a00c740fb47ac901d281b9ec",
-    "u1cd148e62e9f400261598bc5881b4a8f",
-    "u2946eeb9b6e989c0a4c6926466afc5f0",
-    "u92ef364a4c89d937d75b76d20528c409",
-    "u290666b6e42ab343ec273a3d01e4d25e",
-    "u9d86ee1d35925743a909666f4b57e8b8",
-    "u232556ff2e60f9f03b1fc51bd586f80f",
-    "ud281ee0b07474c6038f6ab619b019fcc",
-    "u23624577c4a683811da866c827f16c4b",
-    "uab50973ecf6745e7254c37c1bc3d98e4",
-    "u1bcf6adef9c2229b22dfc0afd17172d6",
-    "u6646870190a41cf4eb8c31e6e0e7d188",
-    "ud50bf504d9eee151d14bc77598ffc9dc",
-    "uae8a7f8ceadae3a4493cd311dbe197ab",
-    "ue32ea0ba38a70b8240f93fc0a97ac7f7",
-    "u842bb2c1a9b8d83b9e708a67c4eaf7e0",
-    "ue357e52773260b47ce977ded57cb7bb9",
-    "u93eba848f9a8c6198a6e77198877506e",
-    "u4bcf9eee92be0071837a5e5375531dde",
-    "u92ee1e98b9306894c3ea789a4b5d1690",
-    "ud2654b3024556e498113ba421c3d6e3b",
-    "u756e40576efe926ea4f613808c8526da",
-    "ub9d037c4669fa04f79765fa52042c983",
-    "u5f9fe6fe544cf48978246a1c548ace35",
-    "u3ea1244194f1b3c773d71ad1044a4bd5",
-    "u86740a258fe0d831d838b19f31eda284",
-    "u0ee25f9fb151cfd96e2be13287ec7b68",
-    "u84fc39fa9d7602f556b678fd859cd9f6",
-    "ucfc3121d75694bc01eb0c350a455f504",
-    "u56fdd16e8e5f432d068a0677b9ab6112",
-    "u65d9b2bf25ee5c0461856ed357679523",
-    "ub78abb90a0fb73ea9bdc91e22b1efe2a",
-    "u1c84417694ade16ca520c820563daf82",
-    "u2f865e77927a24bbdcd0a130763c59c0",
-    "u690bb578378ac229cc3638b99114847a",
-    "ud95b808b338433f3b9ac1f8071dd779b",
-    "u4565bbb2b87596f560115be55ad78676",
-    "u28e06e781032727a39887e3d2c7f720f",
-    "u41c18c9aca0de18995a0c25bd9a7c5fc",
-    "u11cf58710f26cabdaae0ac7a51ce229c",
-    "uf35f6be5e54ea0e75b031643c4135829",
-    "ub5d882a336c10d4ee632611cdf2dcfd2",
-    "u87e1a18282d66c2bb1cb934a49cc1462",
-    "uae73b33945de714ccf8b8f5a39088910",
-    "uf79c930568c271529d6d4ee91018532a",
-    "u0a1d912cd345e7662cbc803ced15cfc1",
-    "u4cc7cb34809a478c2d48adaaeed97882",
-    "ue39538a6edb4e81e5080531cd1adcaea",
-    "u211d47a83d4b18bd433104ae3038984f",
-    "u4e2fc12232cd90709d319337e9ec6a51",
-    "u50594b8024c06134b7ce2386b6be87ee",
-    "u3f50ca8c883b5d8afabd256d3adc5821",
-    "u9ce0c6dee126a48dcc4402c5b1a40f56",
-    "u629587e239c119c57e66851aadec7e3b",
-    "u4799bff437033844b4df6a7efbe869d1",
-    "ud0485a8007a835c40ea5b4e338b279da"
+    "u0de62075f9def9c9e84cafb9e36d9580",
+    "ue152547d5b261a2c8db320ac151a0bbd",
+    "u21f23daf493f23d102a382250878d1b3",
+    "u7683d18f3015e2a6bc914f31152f672f",
+    "u38479e4be2f7b7a37c6fa57f71ed3d3b",
+    "uf18e27b3c0d9f0abdaae8c22d37380c2",
+    "u602c34c2adb185f4688cc058cb6f45ef",
+    "u0a7a1b524f3680a1a7de74e446768a0d",
+    "u16a4f4ec79704b14d3f1b6f9f40ac9b8",
+    "uf7688b95ba317893258db18f37826074",
+    "u1366746a66b75142ccfc7c70a04b9da5",
+    "u755a21a872192eb18d702d1071e0ac49",
+    "u156835d59c39c086df88f1fa9d882c28",
+    "u64c983be701050a2e3162b123488c80d",
+    "u6473b1da6d58c2aa73edf76b97ce9bcd",
+    "u9d6dd300e748f8833a653465dcf410d0",
+    "uc6bedad6de8351a69f5ba733bf8c1255",
+    "u63fecc9ce1539a746dc785d9446a20dc",
+    "ue124634806554cf34b24ca1ec55b7e3b",
+    "uae2a002c345cee8c26b335d2858b5c6a",
+    "uc6fc2f0c9ce1c457c72d17dc542e5763",
+    "u481540c85db0346cd926129debfbd424",
+    "u29c50420b0b6ac26f85649dd9f16a1be",
+    "u1db09c56c322650ab4a0af9ac2152765",
+    "ue60aad8b0b4f139c1d625fd3950231b5",
+    "u008932526e50c71c86d5b75b314a8e85",
+    "uee7038c1f197c57f0dd4c3c653856946",
+    "u87b096b48641a1c158e27bfc2851566d",
+    "u18df54497d86743f6b24e01b41ce7467",
+    "u2399ec892d8c04f5cf5a08b2fc246a95",
+    "ua084e0fff6c4eb2f82446947f69b6f33",
+    "ub8141df177d07a12daa84ebc2b516b4b",
+    "u296d6b60050129f47836d46e56ec82a8",
+    "ub09312848b4a01767c5b03772811f3a4",
+    "u022d508d9b858badef349528d96ef6db",
+    "udfa927b107a2e2c57116ef7a417942c2",
+    "uba51a1860d066726b8e89a84d715d7f4",
+    "u5e195c364f8e087e0939049831e49015",
+    "ubbf0d605436244dfb287f78f9204f8d6",
+    "u155767222244af1b7e003907f7ac4744"
   ],
-  "proxy": "socks5://43.159.18.174:25368",
-  "groupName": "test1",
-  "token": "{\"language\":\"English\",\"acceptLanguage\":\"en-us\",\"acceptLanguageLal\":\"en_TH\",\"localCountry\":\"Thailand\",\"countryCode\":\"TH\",\"storeUserId\":\"9EAE4ACF44D1959D\",\"IDFA\":\"8B9CBFBC-8CB8-4DFA-B9D9-BCACDB99EDFA\",\"lineTsVersion\":\"4.7.2\",\"sessionId\":\"8CAB8EFC-9A89-49CD-A9EB-8DEBDEFEBC99\",\"neloInstallID\":\"8CE8DA8B-DFFE-4BEF-8DDA-EACBBD9FEE9A\",\"host\":\"192.168.37.50\",\"networkType\":\"Cellular\",\"osVersion\":\"16.1\",\"osProductVersion\":\"20B82\",\"osMachine\":\"iPhone14,4\",\"appVersion\":\"14.3.1\",\"carrier\":\"Total Access Communication\",\"MCC\":\"520\",\"MNC\":\"18\",\"sid\":\"CBBCDE8E-DA8A-48C9-8DFF-89CBE8C9EDEF\",\"cid\":\"FEDDE9D9ADBC4BCABFCACD89CEC89EBD\",\"scid\":\"DA88DCA9-FADC-4AAF-8E99-EC9CF9B9B9FE\",\"tdid\":\"i8F8DCDFA-8F9B-4FFE-ABDB-BC8BFD9CAF9C\",\"tcid\":\"99BA9B8B-CBFB-4A9E-ACEC-DBE9BBDEBDEF\",\"ab\":\"2024.307.2034\",\"neloProcessID\":\"C9DE98B8-88BB-4FBA-8DBA-EB9FE8A8C8CD\",\"lineTlUpstreamId\":\"1583881852\",\"txtToken\":\"81f9933e3a434a1aaf7af09893937fd0\",\"projectVersion\":\"2.3.9\",\"projectName\":\"a94b5e903ad040ee93c110e31703c781\",\"channelTokenPost\":\"Xph5f1S1fqCm+7GxGN1DtL2+YN5R8LBrW5JbCQy5kogSgdZCt2sYy7b6MVOt6HU1OZwIDNCK0+uPADfrjw7oko6cBPHMBcpfHofENYg71qCA7DGOYUG4ryjyc+U2Bm0CKf8b5LW479oRM/j8p81mEEXF7dgNu1El6c9CxUcV7MVQ6ro7aIT6DbYnVE6QL0dR\",\"channelTokenNotification\":\"\",\"bindEmail\":\"\",\"deviceDensity\":3,\"deviceHeight\":812,\"deviceWidth\":375,\"deviceCoreCount\":6,\"deviceTotalDiskSpaceGB\":60,\"deviceRemainingDiskSpaceGB\":6,\"deviceTimeZoneName\":\"Asia/Shanghai\",\"deviceZoneAbbrev\":\"GMT+8\",\"password\":\"hitvk292...\",\"nickName\":\"sajye911\",\"authToken\":\"u68ef1dc8e694111e5183392923dad753:ftSNXSKKMktC6iSkjbCs\",\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiYjk2YjM0NS1hYmI0LTQ1NWYtOTEzZC0wYTlhODk0OWU1MzUiLCJhdWQiOiJMSU5FIiwiaWF0IjoxNzExMjgzNzU3LCJleHAiOjE3MTE4ODg1NTcsInNjcCI6IkxJTkVfQ09SRSIsInJ0aWQiOiI3ZTA0ZjZiYi00MzU4LTQ1OGUtYmI3Yy1jMjBmNTdhNDMwZjIiLCJyZXhwIjoxODY4OTYzNzU3LCJ2ZXIiOiIzLjEiLCJhaWQiOiJ1NjhlZjFkYzhlNjk0MTExZTUxODMzOTI5MjNkYWQ3NTMiLCJsc2lkIjoiMDBhYmMwZmEtZmE0ZS00ODU3LTk1ZTYtZWRmN2Y5NDYxNWMxIiwiZGlkIjoiOGVmZWQ5Yzk5OWE5NGM5ZGJkY2FkYWJkODlkYmVhYmYiLCJjdHlwZSI6IklPUyIsImNtb2RlIjoiUFJJTUFSWSIsImNpZCI6IjAwMDAwMDAwMDAifQ.1dipcQ6u-QKqOhErfSgH2Uz3uOzTbIjLADtKaptJjyg\",\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI3ZTA0ZjZiYi00MzU4LTQ1OGUtYmI3Yy1jMjBmNTdhNDMwZjIiLCJhdGkiOiJiYjk2YjM0NS1hYmI0LTQ1NWYtOTEzZC0wYTlhODk0OWU1MzUiLCJhdWQiOiJMSU5FIiwicm90IjoiUk9UQVRFIiwiaWF0IjoxNzExMjgzNzU3LCJleHAiOjE4Njg5NjM3NTcsInNjcCI6IkxJTkVfQ09SRSIsInZlciI6IjMuMSIsImFpZCI6InU2OGVmMWRjOGU2OTQxMTFlNTE4MzM5MjkyM2RhZDc1MyIsImxzaWQiOiIwMGFiYzBmYS1mYTRlLTQ4NTctOTVlNi1lZGY3Zjk0NjE1YzEiLCJkaWQiOiI4ZWZlZDljOTk5YTk0YzlkYmRjYWRhYmQ4OWRiZWFiZiIsImFwcElkIjoiMDAwMDAwMDAwMCJ9.Nd6FnYMWLzzCJO2ckz6eT8opCruIDTXXIMfUWG78nJQ\",\"mid\":\"u68ef1dc8e694111e5183392923dad753\",\"authSessionId\":\"hzPKI5zjjLipGVaA204k3YSqb7EAXN4Y\",\"phone\":\"66809503556\",\"lineHost\":\"gws.line.naver.jp\",\"s5Obj\":{\"is_use\":true,\"ip\":\"43.159.18.174\",\"port\":24356,\"account\":\"\",\"pwd\":\"\",\"proxy_type\":\"socks5\"},\"reqSeq\":1005,\"eventSeq\":22,\"encryptedAccessToken\":\"\",\"clientPrivateKey\":\"GLrihvaNbT7M9kr5h8UfabmMA3cSH2gE+R9HCdheKXc=\",\"clientPublicKey\":\"mtctcsCLmsLngsWgBEq3h/b2XzjoWri2pAs8ywJoUgM=\",\"clientNonce\":\"YmlCmbMT9XGMbCi19pF7Ug==\",\"serverPublicKey\":\"MPEZB9J3LBd7rX7i+dAQunwnQvdcAJXqQ/5KXRRh2Xs=\",\"serverNonce\":\"PUQ0lRHaFvUGpQxZN+1kmg==\",\"clientE2EEPrivateKey\":\"oDzjuMDwzDZJFKYUWeXX024q/xQRj+e8Ac9mDbUxC2g=\",\"clientE2EEPublicKey\":\"9bEXPWpoifS/3RefxBcydCGLtJVUs/vu2mCT2WZRpWQ=\",\"clientE2EENonce\":\"xDUL42DOpEMpHibw+LuxkQ==\",\"clientE2EEPrivateKeyId\":4723959,\"serverE2EEPublicKey\":\"9bEXPWpoifS/3RefxBcydCGLtJVUs/vu2mCT2WZRpWQ=\",\"updateProfileImageStatus\":0,\"accountExistStatus\":true}"
+  "proxy": "socks5://43.159.18.174:24434",
+  "token": "{\"language\":\"English\",\"acceptLanguage\":\"en-us\",\"acceptLanguageLal\":\"en_TH\",\"localCountry\":\"Thailand\",\"countryCode\":\"TH\",\"storeUserId\":\"95F2FD83DA12AEB3\",\"IDFA\":\"9CFD898F-C888-4FF9-9F9F-FF9A9AFFEBE8\",\"lineTsVersion\":\"4.7.2\",\"sessionId\":\"DFBDEFDF-BBEA-4C99-8FEA-A9BFA9CCD9CD\",\"neloInstallID\":\"B8ACEE9A-9BA8-48AF-A8FF-CACDBDCECD9E\",\"host\":\"192.168.37.32\",\"networkType\":\"Cellular\",\"osVersion\":\"16.1.1\",\"osProductVersion\":\"20B101\",\"osMachine\":\"iPhone14,3\",\"appVersion\":\"13.19.1\",\"carrier\":\"CAT CDMA\",\"MCC\":\"520\",\"MNC\":\"02\",\"sid\":\"EC89EBFA-BAB9-49AC-89FE-EDAC9F9AAC9E\",\"cid\":\"FEC8DBAACCEF488EBABAEEBA98FBA8BD\",\"scid\":\"AA8BDFBD-8ED9-4CAC-B988-E89AAF9FDAFE\",\"tdid\":\"i8B9B988A-8CCD-4E88-88FB-ADAFFCDDFBE8\",\"tcid\":\"B98E9BD8-E9EE-4AC9-B9FA-AB9EBEDB9EE8\",\"ab\":\"2023.1127.1821\",\"neloProcessID\":\"8EDE8CFD-8AEE-498A-AAEE-EFE8FB9BC8CB\",\"lineTlUpstreamId\":\"1583881852\",\"txtToken\":\"81f9933e3a434a1aaf7af09893937fd0\",\"projectVersion\":\"2.3.9\",\"projectName\":\"a94b5e903ad040ee93c110e31703c781\",\"channelTokenPost\":\"7MhospCGNvYzWCli3+/k4FpRKou+IP9qQ3oiigpX6RXQLgdYNdUTMs+pxjxlIze/3tQ0E4AXx0fcGWF2ovpmEiAPEzEj7auwLdTnaGmUQ2nDaoOIypWi4HauQbL69sHyp3hdZ8hRfXxZNuzP5XhMiEXF7dgNu1El6c9CxUcV7MVQ6ro7aIT6DbYnVE6QL0dR\",\"channelTokenNotification\":\"y+OdPe60rcfczUJPmzLndZk42+PpMEfxU74KbRGUk5zZGlr3wUMlIDypvZ12TqbA3tQ0E4AXx0fcGWF2ovpmEiAPEzEj7auwLdTnaGmUQ2lyfyg4LKe3eUnhCdb6ZzTjmBl/CCRW2je4/dMReQwP8yt2tr0Yglmj7I8zHda9xO8=\",\"bindEmail\":\"\",\"deviceDensity\":3,\"deviceHeight\":812,\"deviceWidth\":375,\"deviceCoreCount\":6,\"deviceTotalDiskSpaceGB\":60,\"deviceRemainingDiskSpaceGB\":6,\"deviceTimeZoneName\":\"Asia/Shanghai\",\"deviceZoneAbbrev\":\"GMT+8\",\"password\":\"vcckw192...\",\"nickName\":\"xdujz308\",\"authToken\":\"ufd34922ed5b28f486fb8a38f9d772db7:Ed7ibROXBI0QdPGl32mH\",\"accessToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmM2Q5ZTE3MS1iOGExLTQ1MTgtYWEyMy1jZjdhYjQxZDZmNTgiLCJhdWQiOiJMSU5FIiwiaWF0IjoxNzEyMTMxODY3LCJleHAiOjE3MTI3MzY2NjcsInNjcCI6IkxJTkVfQ09SRSIsInJ0aWQiOiIzNDg1Y2Q4Yi05NTg5LTQ2YjYtODk0Yy0xZGExYWM0YWUyY2UiLCJyZXhwIjoxODY5ODExODY3LCJ2ZXIiOiIzLjEiLCJhaWQiOiJ1ZmQzNDkyMmVkNWIyOGY0ODZmYjhhMzhmOWQ3NzJkYjciLCJsc2lkIjoiNTk5MjlmZDMtZmUyMi00OTUwLWIxYmQtMTI3NGYzYzczY2E3IiwiZGlkIjoiYWZjOWVkZWQ5OWRmNGRjZDllZDhlOWM4ZmVkY2I5OGEiLCJjdHlwZSI6IklPUyIsImNtb2RlIjoiUFJJTUFSWSIsImNpZCI6IjAwMDAwMDAwMDAifQ.gTlx9-vKU2wJ3rd9oQFL2510mL6Tn3CTMfaZZ6_pUcM\",\"refreshToken\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzNDg1Y2Q4Yi05NTg5LTQ2YjYtODk0Yy0xZGExYWM0YWUyY2UiLCJhdGkiOiJmM2Q5ZTE3MS1iOGExLTQ1MTgtYWEyMy1jZjdhYjQxZDZmNTgiLCJhdWQiOiJMSU5FIiwicm90IjoiUk9UQVRFIiwiaWF0IjoxNzEyMTMxODY3LCJleHAiOjE4Njk4MTE4NjcsInNjcCI6IkxJTkVfQ09SRSIsInZlciI6IjMuMSIsImFpZCI6InVmZDM0OTIyZWQ1YjI4ZjQ4NmZiOGEzOGY5ZDc3MmRiNyIsImxzaWQiOiI1OTkyOWZkMy1mZTIyLTQ5NTAtYjFiZC0xMjc0ZjNjNzNjYTciLCJkaWQiOiJhZmM5ZWRlZDk5ZGY0ZGNkOWVkOGU5YzhmZWRjYjk4YSIsImFwcElkIjoiMDAwMDAwMDAwMCJ9.uIqKG6ovyImT837eke0EplkYiI04WDYiTce7RflOjxg\",\"mid\":\"ufd34922ed5b28f486fb8a38f9d772db7\",\"authSessionId\":\"NVgYjGb36Qytic0OItCBk0kY4KiD4sVd\",\"phone\":\"66966215103\",\"lineHost\":\"gws.line.naver.jp\",\"s5Obj\":{\"is_use\":true,\"ip\":\"43.159.18.174\",\"port\":24223,\"account\":\"\",\"pwd\":\"\",\"proxy_type\":\"socks5\"},\"reqSeq\":1005,\"eventSeq\":14,\"encryptedAccessToken\":\"\",\"clientPrivateKey\":\"oNoc/deEnWVD6FzQayu+JiqEO2DctEMbIE4t5ic0B3Y=\",\"clientPublicKey\":\"zIvVb6Tx/NBzB9qdFIsfwaNXAtECRhV+ZukAkY8BGTk=\",\"clientNonce\":\"BBsec2lkkBcBW/zZdYIobg==\",\"serverPublicKey\":\"umNGCcO6u7eQ5YsBb8I4eQi6xgTkXLqxKapWiwwcMSw=\",\"serverNonce\":\"oXm52iFWtgyCAj/BnVPj3A==\",\"clientE2EEPrivateKey\":\"0KnnEtAulKcIzQuEFnzAtXaoDwLkqwximHwZQWidHV8=\",\"clientE2EEPublicKey\":\"01escBWg5O4BAFvDBt6ik33UjLyJUQ7luxsyDGq98k8=\",\"clientE2EENonce\":\"Q8dMab+mC9vAlJMr7fYqgw==\",\"clientE2EEPrivateKeyId\":4738091,\"serverE2EEPublicKey\":\"01escBWg5O4BAFvDBt6ik33UjLyJUQ7luxsyDGq98k8=\",\"updateProfileImageStatus\":0,\"accountExistStatus\":true}",
+  "groupName": "無限好運"
 }
 
 
@@ -104,5 +67,5 @@ POST http://137.184.112.207:22117/api/v1/work/createGroupResult
 Content-Type: application/json
 
 {
-  "taskId": "57002d51-4006-4489-a4e1-a0e563b240b1"
+  "taskId": "12860286-7626-4769-ae78-076a45c32631"
 }

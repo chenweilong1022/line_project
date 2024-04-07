@@ -1,5 +1,6 @@
 package io.renren.modules.ltt.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
@@ -117,6 +118,17 @@ public class CdLineRegisterServiceImpl extends ServiceImpl<CdLineRegisterDao, Cd
             issueLiffViewDTO.setToken(cdLineRegisterEntity.getToken());
             lineService.issueLiffView(issueLiffViewDTO);
         }
+    }
+
+    public static void main(String[] args) {
+
+        for (String s : FileUtil.readLines("/Users/chenweilong/Downloads/1712415682416.txt", "UTF-8")) {
+            LineTokenJson lineTokenJson = JSON.parseObject(s, LineTokenJson.class);
+            String format = String.format("%s----%s----%s----%s----%s----%s\n", "66", lineTokenJson.getPhone().replaceFirst("66",""), lineTokenJson.getPassword(), lineTokenJson.getMid(), lineTokenJson.getAccessToken(), lineTokenJson.getRefreshToken());
+            System.out.println(format);
+        }
+
+
     }
 
     @Override

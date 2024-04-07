@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     width="70%"
-    :title="!dataForm.id ? '注册详情' : '注册详情'"
+    :title="!dataForm.id ? '注册详情1' : '注册详情2'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <div class="mod-config">
@@ -113,12 +113,10 @@
 </template>
 
 <script>
- import CdlineRegisterList from './cdlineregister'
- import AddOrUpdate from "./cdlineregister-add-or-update.vue";
   export default {
     data () {
       return {
-        registerStatus: null,
+        registerStatus: 4,
         workOptions: [
           {
             value: 1,
@@ -192,13 +190,10 @@
         }
       }
     },
-    components: {
-      AddOrUpdate,
-      CdlineRegisterList
-    },
     methods: {
       // 获取数据列表
       getDataList () {
+        console.log(this.registerStatus)
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/ltt/cdlineregister/listByTaskId'),
@@ -223,7 +218,10 @@
       init (id) {
         this.dataForm.id = id || 0
         this.visible = true
-        this.getDataList();
+        console.log(this.registerStatus)
+        this.registerStatus = 4
+        console.log(this.registerStatus)
+        this.getDataList()
       },
       // 每页数
       sizeChangeHandle (val) {
@@ -239,42 +237,6 @@
       // 多选
       selectionChangeHandle (val) {
         this.dataListSelections = val
-      },
-      // 表单提交
-      dataFormSubmit () {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            this.$http({
-              url: this.$http.adornUrl(`/ltt/cdregistertask/${!this.dataForm.id ? 'save' : 'update'}`),
-              method: 'post',
-              data: this.$http.adornData({
-                'id': this.dataForm.id || undefined,
-                'totalAmount': this.dataForm.totalAmount,
-                'numberThreads': this.dataForm.numberThreads,
-                'numberRegistered': this.dataForm.numberRegistered,
-                'numberSuccesses': this.dataForm.numberSuccesses,
-                'numberFailures': this.dataForm.numberFailures,
-                'registrationStatus': this.dataForm.registrationStatus,
-                'deleteFlag': this.dataForm.deleteFlag,
-                'createTime': this.dataForm.createTime
-              })
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.$message({
-                  message: '操作成功',
-                  type: 'success',
-                  duration: 1500,
-                  onClose: () => {
-                    this.visible = false
-                    this.$emit('refreshDataList')
-                  }
-                })
-              } else {
-                this.$message.error(data.msg)
-              }
-            })
-          }
-        })
       }
     }
   }

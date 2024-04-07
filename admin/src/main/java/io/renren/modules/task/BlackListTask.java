@@ -153,6 +153,7 @@ public class BlackListTask {
             List<CdLineRegisterEntity> list = cdLineRegisterService.list(new QueryWrapper<CdLineRegisterEntity>().lambda()
                     .eq(CdLineRegisterEntity::getRegisterStatus,RegisterStatus.RegisterStatus3.getKey())
             );
+
             if (CollUtil.isEmpty(list)) {
                 log.info("task4 list isEmpty");
                 return;

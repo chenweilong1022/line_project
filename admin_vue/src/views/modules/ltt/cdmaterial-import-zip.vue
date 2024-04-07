@@ -101,7 +101,7 @@
       },
       // 表单提交
       dataFormSubmit () {
-        window.open(this.$http.adornUrl(`/ltt/cdmaterial/importZip?token=${this.$cookie.get('token')}&id=${this.dataForm.id}`));
+        window.open(this.$http.adornUrl(`/ltt/cdmaterial/importZip?token=${this.$cookie.get('token')}&id=${this.dataForm.id}`))
         // this.$refs['dataForm'].validate((valid) => {
         //   if (valid) {
         //     this.fullscreenLoading = true;

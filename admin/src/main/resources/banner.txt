@@ -440,3 +440,42 @@ CREATE TABLE `cd_phone_filter` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=323 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='手机号筛选';
 
+CREATE TABLE `cd_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `proxy` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `intervals` int(11) DEFAULT NULL,
+  `room_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `chat_room_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `room_ticket_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `upload_group_number` int(11) DEFAULT NULL,
+  `current_executions_number` int(11) DEFAULT NULL,
+  `successfully_attract_groups_number` int(11) DEFAULT NULL,
+  `group_status` int(11) DEFAULT NULL,
+  `delete_flag` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `task_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `line_register_id` int(11) DEFAULT NULL,
+  `add_type` int(11) DEFAULT '1',
+  `material_id` int(11) DEFAULT NULL,
+  `material_phone_type` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2981 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
+CREATE TABLE `at_group_task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `task_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
+  `group_type` int(11) DEFAULT NULL COMMENT '类型',
+  `add_total_quantity` int(11) DEFAULT NULL COMMENT '加粉总数',
+  `successful_quantity` int(11) DEFAULT NULL COMMENT '成功数',
+  `failures_quantity` int(11) DEFAULT NULL COMMENT '失败数',
+  `task_status` int(11) DEFAULT NULL COMMENT '状态',
+  `schedule` int(11) DEFAULT NULL COMMENT '进度',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `delete_flag` int(11) DEFAULT NULL COMMENT '删除标志',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `sys_user_id` bigint(20) NOT NULL COMMENT '管理账户id',
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='拉群任务';
